@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class TypeSystemKodkodTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String path = "/home/harun/git/JavaAnalyzer/src";
-        JavaParserTypeSystemCreator javaParserTypeSystemCollector = new JavaParserTypeSystemCreator(path);
+        JavaParserTypeSystemCreator javaParserTypeSystemCollector = new JavaParserTypeSystemCreator(path, true);
 
         TypeSystem typeSystem = javaParserTypeSystemCollector.createTypeSystem();
 

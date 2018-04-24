@@ -28,12 +28,15 @@ public class JavaParserTypeSystemCreator {
     private String path;
     private CombinedTypeSolver combinedTypeSolver;
 
-    public JavaParserTypeSystemCreator(String path) {
+    public JavaParserTypeSystemCreator(String path, boolean findAllRoots) {
         this.path = path;
         combinedTypeSolver = new CombinedTypeSolver();
         combinedTypeSolver.add(new ReflectionTypeSolver());
 
-        PackageRootFinder.getDirectories(path).forEach(this::addPackagePath);
+        if (findAllRoots)
+            PackageRootFinder.getDirectories(path).forEach(this::addPackagePath);
+        else
+            addPackagePath(path);
     }
 
     public void addPackagePath(String dir) {

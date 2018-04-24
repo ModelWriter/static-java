@@ -7,7 +7,7 @@ public class TypeSystemTest {
 
     public static void main(String[] args) throws IOException {
 
-        JavaParserTypeSystemCreator javaParserTypeSystemCollector = new JavaParserTypeSystemCreator("/home/irem/IdeaProjects/JavaAnalyzer");
+        JavaParserTypeSystemCreator javaParserTypeSystemCollector = new JavaParserTypeSystemCreator("/home/irem/IdeaProjects/JavaAnalyzer", true);
         javaParserTypeSystemCollector.addPackagePath("/home/irem/IdeaProjects/JavaAnalyzer/src/main/java");
         javaParserTypeSystemCollector.addPackagePath("/home/irem/IdeaProjects/JavaAnalyzer/src/test/java");
 

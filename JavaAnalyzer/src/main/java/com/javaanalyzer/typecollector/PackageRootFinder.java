@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Created by irem on 24.02.2018.
- */
 public class PackageRootFinder {
     private List<File> allJavaFiles;
     private File file;
