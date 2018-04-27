@@ -1,9 +1,6 @@
 package com.javaanalyzer.solver;
 
-import com.javaanalyzer.typesystem.ClassType;
-import com.javaanalyzer.typesystem.InterfaceType;
-import com.javaanalyzer.typesystem.Type;
-import com.javaanalyzer.typesystem.TypeSystem;
+import com.javaanalyzer.typesystem.*;
 import kodkod.ast.Formula;
 import kodkod.ast.Relation;
 import kodkod.engine.Solution;
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Created by harun on 2/24/18.
  */
-public class KodkodTranslator implements Iterator<Map<String, Type>> {
+public class KodkodTranslator implements Iterator<Map<String, Entity>> {
 
     private Universe universe;
     private TupleFactory tupleFactory;
@@ -31,11 +28,28 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
 
     public final Relation CLASS;
     public final Relation INTERFACE;
-    public final Relation INHERITS;
+    public final Relation METHOD;
+    public final Relation CONSTRUCTOR;
+    public final Relation FIELD;
+
+    public final Relation BOOLEAN_TRUE;
+    public final Relation BOOLEAN_FALSE;
+    public final Relation ACCESS_PUBLIC;
+    public final Relation ACCESS_PRIVATE;
+    public final Relation ACCESS_PROTECTED;
+    public final Relation ACCESS_DEFAULT;
+
     public final Relation EXTENDS;
     public final Relation IMPLEMENTS;
     public final Relation CONTAINS;
     public final Relation CALLS;
+    public final Relation ABSTRACT;
+    public final Relation STATIC;
+    public final Relation ACCESS_SPECIFIER;
+    public final Relation CONSTRUCTORS;
+    public final Relation METHODS;
+    public final Relation FIELDS;
+    public final Relation RETURNS;
 
     private Map<String, Relation> relationMap;
 
@@ -48,28 +62,76 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
         solutionIterator = null;
         currentSolution = null;
 
-        universe = new Universe(typeSystem.getTypes());
+        universe = new Universe(typeSystem.getEntities());
 
         CLASS = Relation.unary("Class");
         INTERFACE = Relation.unary("Interface");
-        INHERITS = Relation.binary("inherits");
+        METHOD = Relation.unary("Method");
+        CONSTRUCTOR = Relation.unary("Constructor");
+        FIELD = Relation.unary("Field");
+
+        BOOLEAN_TRUE = Relation.unary("True");
+        BOOLEAN_FALSE = Relation.unary("False");
+
+        ACCESS_PUBLIC = Relation.unary("Public");
+        ACCESS_PRIVATE = Relation.unary("Private");
+        ACCESS_PROTECTED = Relation.unary("Protected");
+        ACCESS_DEFAULT = Relation.unary("Default");
+
         EXTENDS = Relation.binary("extends");
         IMPLEMENTS = Relation.binary("implements");
         CONTAINS = Relation.binary("contains");
         CALLS = Relation.binary("calls");
+        ABSTRACT = Relation.binary("abstract");
+        STATIC = Relation.binary("static");
+        ACCESS_SPECIFIER = Relation.binary("access");
+        CONSTRUCTORS = Relation.binary("constructors");
+        METHODS = Relation.binary("methods");
+        FIELDS = Relation.binary("fields");
+        RETURNS = Relation.binary("returns");
 
         tupleFactory = universe.factory();
         bounds = new Bounds(universe);
 
-        Set<Type> classTuples = typeSystem.getTypes().stream()
+        Set<Type> classTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof ClassType)
+                .map(e -> (Type) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(CLASS, classTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(classTuples.toArray()));
 
-        Set<Type> interfaceTuples = typeSystem.getTypes().stream()
+        Set<Type> interfaceTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof InterfaceType)
+                .map(e -> (Type) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(INTERFACE, interfaceTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(interfaceTuples.toArray()));
+
+        Set<Method> methodTuples = typeSystem.getEntities().stream()
+                .filter(e -> e instanceof Method)
+                .map(e -> (Method) e)
+                .collect(Collectors.toSet());
+        bounds.boundExactly(METHOD, methodTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(methodTuples.toArray()));
+
+        Set<Constructor> constructorTuples = typeSystem.getEntities().stream()
+                .filter(e -> e instanceof Constructor)
+                .map(e -> (Constructor) e)
+                .collect(Collectors.toSet());
+        bounds.boundExactly(CONSTRUCTOR, constructorTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(constructorTuples.toArray()));
+
+        Set<Field> fieldTuples = typeSystem.getEntities().stream()
+                .filter(e -> e instanceof Field)
+                .map(e -> (Field) e)
+                .collect(Collectors.toSet());
+        bounds.boundExactly(FIELD, fieldTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(fieldTuples.toArray()));
+
+
+        bounds.boundExactly(BOOLEAN_TRUE, tupleFactory.setOf(BooleanEntity.TRUE));
+        bounds.boundExactly(BOOLEAN_FALSE, tupleFactory.setOf(BooleanEntity.FALSE));
+
+        bounds.boundExactly(ACCESS_PUBLIC, tupleFactory.setOf(AccessSpecifierEntity.PUBLIC));
+        bounds.boundExactly(ACCESS_PRIVATE, tupleFactory.setOf(AccessSpecifierEntity.PRIVATE));
+        bounds.boundExactly(ACCESS_PROTECTED, tupleFactory.setOf(AccessSpecifierEntity.PROTECTED));
+        bounds.boundExactly(ACCESS_DEFAULT, tupleFactory.setOf(AccessSpecifierEntity.DEFAULT));
+
 
         Set<Tuple> extendsTuples = typeSystem.getExtends().getEdges().stream()
                 .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
@@ -81,10 +143,6 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
                 .collect(Collectors.toSet());
         bounds.boundExactly(IMPLEMENTS, implementsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(implementsTuples));
 
-        Set<Tuple> inheritsTuples = new HashSet<>(extendsTuples);
-        inheritsTuples.addAll(implementsTuples);
-        bounds.boundExactly(INHERITS, inheritsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(inheritsTuples));
-
         Set<Tuple> containsTuples = typeSystem.getContains().getEdges().stream()
                 .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
                 .collect(Collectors.toSet());
@@ -94,6 +152,41 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
                 .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
                 .collect(Collectors.toSet());
         bounds.boundExactly(CALLS, callsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(callsTuples));
+
+        Set<Tuple> abstractTuples = typeSystem.getAbstract().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(ABSTRACT, abstractTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(abstractTuples));
+
+        Set<Tuple> staticTuples = typeSystem.getStatic().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(STATIC, staticTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(staticTuples));
+
+        Set<Tuple> accessSpecifierTuples = typeSystem.getAccessSpecifier().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(ACCESS_SPECIFIER, accessSpecifierTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(accessSpecifierTuples));
+
+        Set<Tuple> constructorsTuples = typeSystem.getConstructors().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(CONSTRUCTORS, constructorsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(constructorsTuples));
+
+        Set<Tuple> methodsTuples = typeSystem.getMethods().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(METHODS, methodsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(methodsTuples));
+
+        Set<Tuple> fieldsTuples = typeSystem.getFields().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(FIELDS, fieldsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(fieldsTuples));
+
+        Set<Tuple> returnsTuples = typeSystem.getReturns().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(RETURNS, returnsTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(returnsTuples));
 
         solver = new Solver();
         solver.options().setSolver(SATFactory.MiniSat);
@@ -123,67 +216,6 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
         formulas.add(formula);
     }
 
-    public void isClass(String type, boolean value) {
-        Relation rel = relationMap.computeIfAbsent(type, this::createUnaryRelation);
-        if (value)
-            formulas.add(rel.in(CLASS));
-        else
-            formulas.add(rel.in(CLASS).not());
-    }
-
-    public void isInterface(String type, boolean value) {
-        Relation rel = relationMap.computeIfAbsent(type, this::createUnaryRelation);
-        if (value)
-            formulas.add(rel.in(INTERFACE));
-        else
-            formulas.add(rel.in(INTERFACE).not());
-    }
-
-    public void setInherits(String subType, String superType, boolean value) {
-        Relation subRel = relationMap.computeIfAbsent(subType, this::createUnaryRelation);
-        Relation superRel = relationMap.computeIfAbsent(superType, this::createUnaryRelation);
-        if (value)
-            formulas.add(superRel.in(subRel.join(INHERITS)));
-        else
-            formulas.add(superRel.in(subRel.join(INHERITS)).not());
-    }
-
-    public void setExtends(String subType, String superType, boolean value) {
-        Relation subRel = relationMap.computeIfAbsent(subType, this::createUnaryRelation);
-        Relation superRel = relationMap.computeIfAbsent(superType, this::createUnaryRelation);
-        if (value)
-            formulas.add(superRel.in(subRel.join(EXTENDS)));
-        else
-            formulas.add(superRel.in(subRel.join(EXTENDS)).not());
-    }
-
-    public void setImplements(String subType, String superType, boolean value) {
-        Relation subRel = relationMap.computeIfAbsent(subType, this::createUnaryRelation);
-        Relation superRel = relationMap.computeIfAbsent(superType, this::createUnaryRelation);
-        if (value)
-            formulas.add(superRel.in(subRel.join(IMPLEMENTS)));
-        else
-            formulas.add(superRel.in(subRel.join(IMPLEMENTS)).not());
-    }
-
-    public void setContains(String container, String contained, boolean value) {
-        Relation containerRel = relationMap.computeIfAbsent(container, this::createUnaryRelation);
-        Relation containedRel = relationMap.computeIfAbsent(contained, this::createUnaryRelation);
-        if (value)
-            formulas.add(containedRel.in(containerRel.join(CONTAINS)));
-        else
-            formulas.add(containedRel.in(containerRel.join(CONTAINS)).not());
-    }
-
-    public void setCalls(String caller, String called, boolean value) {
-        Relation callerRel = relationMap.computeIfAbsent(caller, this::createUnaryRelation);
-        Relation calledRel = relationMap.computeIfAbsent(called, this::createUnaryRelation);
-        if (value)
-            formulas.add(calledRel.in(callerRel.join(CALLS)));
-        else
-            formulas.add(calledRel.in(callerRel.join(CALLS)).not());
-    }
-
     public void solve() {
         solutionIterator = solver.solveAll(Formula.and(formulas), bounds);
         currentSolution = solutionIterator.next();
@@ -197,7 +229,7 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
     }
 
     @Override
-    public Map<String, Type> next() {
+    public Map<String, Entity> next() {
         if (!hasNext())
             return null;
 
@@ -205,10 +237,10 @@ public class KodkodTranslator implements Iterator<Map<String, Type>> {
         currentSolution = solutionIterator.next();
 
         return solution.instance().relationTuples().entrySet().stream()
-                .filter(e -> relationMap.containsKey(e.getKey().name()))
+                .filter(e -> relationMap.containsValue(e.getKey()))
                 .filter(e -> !e.getValue().isEmpty())
                 .collect(Collectors.toMap(e -> e.getKey().name(), e -> e.getValue().stream()
-                        .filter(f -> f.atom(0) instanceof Type)
-                        .map(f -> (Type) f.atom(0)).findFirst().orElse(null)));
+                        .filter(f -> f.atom(0) instanceof Entity)
+                        .map(f -> (Entity) f.atom(0)).findFirst().orElse(null)));
     }
 }

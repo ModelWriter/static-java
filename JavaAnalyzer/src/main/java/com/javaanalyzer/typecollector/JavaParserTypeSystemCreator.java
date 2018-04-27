@@ -5,18 +5,19 @@ import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
+import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
+import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserClassDeclaration;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.github.javaparser.utils.SourceRoot;
-import com.javaanalyzer.typesystem.ClassType;
-import com.javaanalyzer.typesystem.InterfaceType;
-import com.javaanalyzer.typesystem.Type;
-import com.javaanalyzer.typesystem.TypeSystem;
+import com.javaanalyzer.typesystem.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +51,9 @@ public class JavaParserTypeSystemCreator {
     public TypeSystem createTypeSystem() {
 
         TypeSystem typeSystem = new TypeSystem();
-        Map<String, Type> typeMap = new HashMap<>();
+
+        Map<ClassOrInterfaceDeclaration, ResolvedReferenceTypeDeclaration> classToResolvedType = new HashMap<>();
+        Map<String, Entity> entityMap = new HashMap<>();
 
         JavaSymbolSolver symbolSolver = new JavaSymbolSolver(combinedTypeSolver);
         JavaParser.getStaticConfiguration().setSymbolResolver(symbolSolver);
@@ -71,89 +74,213 @@ public class JavaParserTypeSystemCreator {
             return typeSystem;
         }
 
-        // First, get all types
-        compilationUnits.forEach(cu -> {
-            cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
-                try {
-                    ResolvedReferenceTypeDeclaration resolved = declaration.resolve();
-                    Type type = declaration.isInterface()
-                            ? new InterfaceType(resolved.getQualifiedName(), resolved.getClassName())
-                            : new ClassType(resolved.getQualifiedName(), resolved.getClassName(), declaration.isAbstract());
+        compilationUnits.forEach(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
+            try {
+                ResolvedReferenceTypeDeclaration resolved = declaration.resolve();
+                Type type = declaration.isInterface()
+                        ? new InterfaceType(resolved.getQualifiedName(), resolved.getClassName())
+                        : new ClassType(resolved.getQualifiedName(), resolved.getClassName(), declaration.isAbstract());
 
-                    cu.getStorage().ifPresent(storage -> type.setLocation(storage.getPath().toString()));
+                String path = cu.getStorage().map(e -> e.getPath().toString()).orElse("");
 
-                    typeMap.put(resolved.getQualifiedName(), type);
-                    typeSystem.addType(type);
+                type.setLocation(path);
+
+                classToResolvedType.put(declaration, resolved);
+                entityMap.put(resolved.getQualifiedName(), type);
+                typeSystem.addEntity(type);
+
+                resolved.getDeclaredMethods().forEach(m -> {
+                    Method method = new Method(m.getQualifiedName(), type.getShortName() + "::" + m.getName());
+                    method.setLocation(path);
+                    entityMap.put(m.getQualifiedName(), method);
+                    typeSystem.addEntity(method);
+                });
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
+
+        compilationUnits.forEach(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
+            try {
+                ResolvedReferenceTypeDeclaration resolved = classToResolvedType.get(declaration);
+                Type type = (Type) entityMap.get(resolved.getQualifiedName());
+
+                if (type == null)
+                    return;
+
+                // Get inheritances
+                if (type instanceof InterfaceType) {
+                    resolved.getAncestors().stream()
+                            .map(e -> entityMap.get(e.getQualifiedName()))
+                            .forEach(superType -> {
+                                if (superType instanceof InterfaceType)
+                                    typeSystem.declareExtends((InterfaceType) type, (InterfaceType) superType);
+                            });
                 }
-                catch (Exception e) {
-                    e.printStackTrace();
+                else if (type instanceof ClassType) {
+                    resolved.getAncestors().stream()
+                            .map(e -> entityMap.get(e.getQualifiedName()))
+                            .forEach(superType -> {
+                                if (superType instanceof ClassType)
+                                    typeSystem.declareExtends((ClassType) type, (ClassType) superType);
+                                else if (superType instanceof InterfaceType)
+                                    typeSystem.declareImplements((ClassType) type, (InterfaceType) superType);
+                            });
                 }
-            });
-        });
 
-        // Second, get the relations
-        compilationUnits.forEach(cu -> {
-            cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
-                try {
-                    ResolvedReferenceTypeDeclaration resolved = declaration.resolve();
-                    Type type = typeMap.getOrDefault(resolved.getQualifiedName(), null);
+                if (resolved instanceof JavaParserClassDeclaration) {
+                    ((JavaParserClassDeclaration) resolved).getConstructors().forEach(constructorDeclaration -> {
 
-                    if (type == null)
-                        return;
+                        Constructor constructor = new Constructor(constructorDeclaration.getQualifiedSignature()
+                                , type.getShortName() + "::" + constructorDeclaration.getSignature());
 
-                    // Get inheritances
-                    if (type instanceof InterfaceType) {
-                        resolved.getAncestors().stream()
-                                .map(t -> typeMap.getOrDefault(t.getQualifiedName(), null))
-                                .forEach(superType -> {
-                                    if (superType instanceof InterfaceType)
-                                        typeSystem.declareExtends((InterfaceType) type, (InterfaceType) superType);
-                                });
-                    }
-                    else if (type instanceof ClassType) {
-                        resolved.getAncestors().stream()
-                                .map(t -> typeMap.getOrDefault(t.getQualifiedName(), null))
-                                .forEach(superType -> {
-                                    if (superType instanceof ClassType)
-                                        typeSystem.declareExtends((ClassType) type, (ClassType) superType);
-                                    else if (superType instanceof InterfaceType)
-                                        typeSystem.declareImplements((ClassType) type, (InterfaceType) superType);
-                                });
-                    }
-
-                    // Get contains
-                    declaration.findAll(FieldDeclaration.class).stream().map(e -> {
-                        try {
-                            return e.getElementType().resolve().asReferenceType().getQualifiedName();
+                        switch (constructorDeclaration.accessSpecifier()) {
+                            case PUBLIC:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PUBLIC);
+                                break;
+                            case PRIVATE:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PRIVATE);
+                                break;
+                            case PROTECTED:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PROTECTED);
+                                break;
+                            case DEFAULT:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.DEFAULT);
+                                break;
                         }
-                        catch (Exception ignored) {
-                            return null;
+
+                        if (type instanceof ClassType) {
+                            typeSystem.declareConstructors((ClassType) type, constructor);
                         }
-                    }).filter(Objects::nonNull).distinct().forEach(name -> {
-                        Type contained = typeMap.getOrDefault(name, null);
+                    });
+                }
+
+                if (declaration.isPrivate()) {
+                    typeSystem.declareAccessSpecifier(type, AccessSpecifierEntity.PRIVATE);
+                }
+                else if (declaration.isPublic()) {
+                    typeSystem.declareAccessSpecifier(type, AccessSpecifierEntity.PUBLIC);
+                }
+                else if (declaration.isProtected()) {
+                    typeSystem.declareAccessSpecifier(type, AccessSpecifierEntity.PROTECTED);
+                }
+                else {
+                    typeSystem.declareAccessSpecifier(type, AccessSpecifierEntity.DEFAULT);
+                }
+
+                if (declaration.isAbstract()) {
+                    typeSystem.declareAbstract(type, BooleanEntity.TRUE);
+                }
+
+                // Get fields
+                resolved.getAllFields().forEach(fieldDeclaration -> {
+                    try {
+                        ResolvedReferenceTypeDeclaration fieldType = fieldDeclaration.getType().asReferenceType().getTypeDeclaration();
+
+                        Field field = new Field(type.getFullName() + "." + fieldDeclaration.getName(), type.getShortName() + "." + fieldDeclaration.getName());
+
+                        field.setLocation(type.getLocation());
+
+                        typeSystem.declareFields(type, field);
+
+                        switch (fieldDeclaration.accessSpecifier()) {
+                            case PUBLIC:
+                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PUBLIC);
+                                break;
+                            case PRIVATE:
+                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PRIVATE);
+                                break;
+                            case PROTECTED:
+                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PROTECTED);
+                                break;
+                            case DEFAULT:
+                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.DEFAULT);
+                                break;
+                        }
+
+                        typeSystem.declareStatic(field, fieldDeclaration.isStatic() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
+
+                        Type contained = (Type) entityMap.get(fieldType.getQualifiedName());
                         if (contained != null)
                             typeSystem.declareContains(type, contained);
-                    });
+                            typeSystem.declareReturns(field, contained);
+                        }
+                        catch (Exception ignored) {}
+                });
 
-                    // Get calls
-                    declaration.findAll(MethodCallExpr.class).stream().map(m -> {
-                        try {
-                            return m.resolveInvokedMethod().declaringType().getQualifiedName();
+
+                // Get methods
+                resolved.getDeclaredMethods().forEach(m -> {
+                    Method method = (Method) entityMap.get(m.getQualifiedName());
+
+                    if (method == null)
+                        return;
+
+                    typeSystem.declareMethods(type, method);
+
+                    switch (m.accessSpecifier()) {
+                        case PUBLIC:
+                            typeSystem.declareAccessSpecifier(method, AccessSpecifierEntity.PUBLIC);
+                            break;
+                        case PRIVATE:
+                            typeSystem.declareAccessSpecifier(method, AccessSpecifierEntity.PRIVATE);
+                            break;
+                        case PROTECTED:
+                            typeSystem.declareAccessSpecifier(method, AccessSpecifierEntity.PROTECTED);
+                            break;
+                        case DEFAULT:
+                            typeSystem.declareAccessSpecifier(method, AccessSpecifierEntity.DEFAULT);
+                            break;
+                    }
+
+                    typeSystem.declareStatic(method, m.isStatic() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
+                    typeSystem.declareAbstract(method, m.isAbstract() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
+
+                    try {
+                        Type returnType = (Type) entityMap.get(m.getReturnType().asReferenceType().getTypeDeclaration().getQualifiedName());
+
+                        if (returnType == null)
+                            return;
+
+                        typeSystem.declareReturns(method, returnType);
+                    }
+                    catch (Exception ignored) {
+
+                    }
+                });
+
+                // Get calls
+                declaration.findAll(MethodDeclaration.class).forEach(methodDeclaration -> {
+                    try {
+                        ResolvedMethodDeclaration resolvedMethodDeclaration = methodDeclaration.resolve();
+                        Method method = (Method) entityMap.get(resolvedMethodDeclaration.getQualifiedName());
+
+                        if (method == null) {
+                            method = (Method) entityMap.get(type.getFullName() + "." + resolvedMethodDeclaration.getName());
+                            if (method == null)
+                                return;
                         }
-                        catch (Exception ignored) {
-                            return null;
-                        }
-                    }).filter(Objects::nonNull).distinct().forEach(name -> {
-                        Type called = typeMap.getOrDefault(name, null);
-                        if (called != null)
-                            typeSystem.declareCalls(type, called);
-                    });
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        });
+
+                        final Method finalMethod = method;
+
+                        methodDeclaration.findAll(MethodCallExpr.class).forEach(m -> {
+                            try {
+                                Method called = (Method) entityMap.get(m.resolveInvokedMethod().getQualifiedName());
+                                if (called != null)
+                                    typeSystem.declareCalls(finalMethod, called);
+                            }
+                            catch (Exception ignored) {}
+                        });
+                    }
+                    catch (Exception ignored) {}
+                });
+
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
 
         return typeSystem;
     }

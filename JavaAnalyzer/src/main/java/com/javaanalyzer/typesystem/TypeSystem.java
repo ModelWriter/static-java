@@ -8,128 +8,142 @@ import java.util.stream.Collectors;
 
 public class TypeSystem {
 
-    private SmartGraph<Type> graph;
+    private SmartGraph<Entity> graph;
 
-    private EdgeType<Type, Type> EXTENDS;
-    private EdgeType<Type, Type> IMPLEMENTS;
-    private EdgeType<Type, Type> CONTAINS;
-    private EdgeType<Type, Type> CALLS;
+    private EdgeType<Entity, Entity> EXTENDS;
+    private EdgeType<Entity, Entity> IMPLEMENTS;
+    private EdgeType<Entity, Entity> CONTAINS;
+    private EdgeType<Entity, Entity> CALLS;
+    private EdgeType<Entity, Entity> ABSTRACT;
+    private EdgeType<Entity, Entity> CONSTRUCTORS;
+    private EdgeType<Entity, Entity> METHODS;
+    private EdgeType<Entity, Entity> FIELDS;
+    private EdgeType<Entity, Entity> ACCESS_SPECIFIER;
+    private EdgeType<Entity, Entity> STATIC;
+    private EdgeType<Entity, Entity> RETURNS;
 
     public TypeSystem() {
         graph = new SmartGraph<>();
 
-        EXTENDS = graph.createEdgeType("extends");
-        IMPLEMENTS = graph.createEdgeType("implements");
+        EXTENDS = graph.createEdgeType("EXTENDS");
+        IMPLEMENTS = graph.createEdgeType("IMPLEMENTS");
         CONTAINS = graph.createEdgeType("CONTAINS");
         CALLS = graph.createEdgeType("CALLS");
+        ABSTRACT = graph.createEdgeType("ABSTRACT");
+        CONSTRUCTORS = graph.createEdgeType("CONSTRUCTORS");
+        METHODS = graph.createEdgeType("METHODS");
+        FIELDS = graph.createEdgeType("FIELDS");
+        ACCESS_SPECIFIER = graph.createEdgeType("ACCESS_SPECIFIER");
+        STATIC = graph.createEdgeType("STATIC");
+        RETURNS = graph.createEdgeType("RETURNS");
 
-        //graph.addSmartListener(SmartListener.INFERS(CONTAINS, EXTENDS, CONTAINS));
-        //graph.addSmartListener(SmartListener.INFERS(EXTENDS, CONTAINS, CONTAINS));
+        addEntity(AccessSpecifierEntity.DEFAULT);
+        addEntity(AccessSpecifierEntity.PRIVATE);
+        addEntity(AccessSpecifierEntity.PUBLIC);
+        addEntity(AccessSpecifierEntity.PROTECTED);
+
+        addEntity(BooleanEntity.TRUE);
+        addEntity(BooleanEntity.FALSE);
     }
 
-    public void addType(Type type) {
+    public void addEntity(Entity type) {
         graph.addNode(type);
     }
 
     public void declareExtends(ClassType subType, ClassType superType) {
         graph.createEdge(EXTENDS, subType, superType);
-        superType.addSubType(subType);
     }
 
     public void declareExtends(InterfaceType subType, InterfaceType superType) {
         graph.createEdge(EXTENDS, subType, superType);
-        superType.addSubType(subType);
     }
 
     public void declareImplements(ClassType subType, InterfaceType superType) {
         graph.createEdge(IMPLEMENTS, subType, superType);
-        subType.addImplementedType(superType);
     }
 
     public void declareContains(Type container, Type contained) {
         graph.createEdge(CONTAINS, container, contained);
-        container.addContains(contained);
     }
 
-    public void declareCalls(Type caller, Type called) {
+    public void declareCalls(Method caller, Method called) {
         graph.createEdge(CALLS, caller, called);
-        caller.addCalls(called);
     }
 
-    public Set<Type> getTypes() {
+    public void declareAbstract(Entity entity, BooleanEntity booleanEntity) {
+        graph.createEdge(ABSTRACT, entity, booleanEntity);
+    }
+
+    public void declareConstructors(ClassType type, Constructor constructor) {
+        graph.createEdge(CONSTRUCTORS, type, constructor);
+    }
+
+    public void declareMethods(Type type, Method method) {
+        graph.createEdge(METHODS, type, method);
+    }
+
+    public void declareFields(Type type, Field field) {
+        graph.createEdge(FIELDS, type, field);
+    }
+
+    public void declareAccessSpecifier(Entity entity, AccessSpecifierEntity accessSpecifierEntity) {
+        graph.createEdge(ACCESS_SPECIFIER, entity, accessSpecifierEntity);
+    }
+
+    public void declareStatic(Entity entity, BooleanEntity booleanEntity) {
+        graph.createEdge(STATIC, entity, booleanEntity);
+    }
+
+    public void declareReturns(Entity entity, Type type) {
+        graph.createEdge(RETURNS, entity, type);
+    }
+
+    public Set<Entity> getEntities() {
         return graph.getNodes();
     }
 
-    public Set<Type> getSubTypes(Type type) {
-        return graph.getIncomingEdges(EXTENDS, type).stream().map(Edge::getSource).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getSuperTypes(Type type) {
-        return graph.getOutgoingEdges(EXTENDS, type).stream().map(Edge::getTarget).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getImplementingTypes(InterfaceType type) {
-        return graph.getIncomingEdges(IMPLEMENTS, type).stream().map(Edge::getSource).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getImplementedTypes(ClassType type) {
-        return graph.getOutgoingEdges(IMPLEMENTS, type).stream().map(Edge::getTarget).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getAllSubTypes(Type type) {
-        Set<Type> set = getSubTypes(type);
-        set.addAll(set.stream().map(this::getAllSubTypes).flatMap(Collection::stream).collect(Collectors.toSet()));
-        return set;
-    }
-
-    public Set<Type> getAllSuperTypes(Type type) {
-        Set<Type> set = getSuperTypes(type);
-        set.addAll(set.stream().map(this::getAllSuperTypes).flatMap(Collection::stream).collect(Collectors.toSet()));
-        return set;
-    }
-
-    public Set<Type> getAllImplementedTypes(ClassType type) {
-        Set<Type> set = getImplementedTypes(type);
-        set.addAll(set.stream().map(this::getAllSuperTypes).flatMap(Collection::stream).collect(Collectors.toSet()));
-        return set;
-    }
-
-    public Set<Type> getAllImplementingTypes(InterfaceType type) {
-        Set<Type> set = getImplementingTypes(type);
-        set.addAll(set.stream().map(this::getAllSubTypes).flatMap(Collection::stream).collect(Collectors.toSet()));
-        return set;
-    }
-
-    public Set<Type> getCalledTypes(Type type) {
-        return graph.getOutgoingEdges(CALLS, type).stream().map(Edge::getTarget).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getCallingTypes(Type type) {
-        return graph.getIncomingEdges(CALLS, type).stream().map(Edge::getSource).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getContainedTypes(Type type) {
-        return graph.getOutgoingEdges(CONTAINS, type).stream().map(Edge::getTarget).collect(Collectors.toSet());
-    }
-
-    public Set<Type> getContainingTypes(Type type) {
-        return graph.getIncomingEdges(CONTAINS, type).stream().map(Edge::getSource).collect(Collectors.toSet());
-    }
-
-    public EdgeType<Type, Type> getCalls() {
+    public EdgeType<Entity, Entity> getCalls() {
         return CALLS;
     }
 
-    public EdgeType<Type, Type> getContains() {
+    public EdgeType<Entity, Entity> getContains() {
         return CONTAINS;
     }
 
-    public EdgeType<Type, Type> getExtends() {
+    public EdgeType<Entity, Entity> getExtends() {
         return EXTENDS;
     }
 
-    public EdgeType<Type, Type> getImplements() {
+    public EdgeType<Entity, Entity> getImplements() {
         return IMPLEMENTS;
+    }
+
+    public EdgeType<Entity, Entity> getAbstract() {
+        return ABSTRACT;
+    }
+
+    public EdgeType<Entity, Entity> getConstructors() {
+        return CONSTRUCTORS;
+    }
+
+    public EdgeType<Entity, Entity> getMethods() {
+        return METHODS;
+    }
+
+    public EdgeType<Entity, Entity> getFields() {
+        return FIELDS;
+    }
+
+    public EdgeType<Entity, Entity> getAccessSpecifier() {
+        return ACCESS_SPECIFIER;
+    }
+
+    public EdgeType<Entity, Entity> getStatic() {
+        return STATIC;
+    }
+
+    public EdgeType<Entity, Entity> getReturns() {
+        return RETURNS;
     }
 
 }
