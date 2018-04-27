@@ -40,6 +40,7 @@ public class PackageRootFinder {
             if (f.isDirectory()) {
                 getAllJavaFiles(f);
             } else if (f.getName().endsWith(".java")) {
+                f = f.getAbsoluteFile();
                 allJavaFiles.add(f);
             }
         }
