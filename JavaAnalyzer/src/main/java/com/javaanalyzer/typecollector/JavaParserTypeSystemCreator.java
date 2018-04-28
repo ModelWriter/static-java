@@ -173,41 +173,43 @@ public class JavaParserTypeSystemCreator {
                     typeSystem.declareAbstract(type, BooleanEntity.TRUE);
                 }
 
-                // Get fields
-                resolved.getAllFields().forEach(fieldDeclaration -> {
-                    try {
-                        ResolvedReferenceTypeDeclaration fieldType = fieldDeclaration.getType().asReferenceType().getTypeDeclaration();
+                try {
+                    resolved.getAllFields().forEach(fieldDeclaration -> {
+                        try {
+                            ResolvedReferenceTypeDeclaration fieldType = fieldDeclaration.getType().asReferenceType().getTypeDeclaration();
 
-                        Field field = new Field(type.getFullName() + "." + fieldDeclaration.getName(), type.getShortName() + "." + fieldDeclaration.getName());
+                            Field field = new Field(type.getFullName() + "." + fieldDeclaration.getName(), type.getShortName() + "." + fieldDeclaration.getName());
 
-                        field.setLocation(type.getLocation());
+                            field.setLocation(type.getLocation());
 
-                        typeSystem.declareFields(type, field);
+                            typeSystem.declareFields(type, field);
 
-                        switch (fieldDeclaration.accessSpecifier()) {
-                            case PUBLIC:
-                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PUBLIC);
-                                break;
-                            case PRIVATE:
-                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PRIVATE);
-                                break;
-                            case PROTECTED:
-                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PROTECTED);
-                                break;
-                            case DEFAULT:
-                                typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.DEFAULT);
-                                break;
-                        }
+                            switch (fieldDeclaration.accessSpecifier()) {
+                                case PUBLIC:
+                                    typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PUBLIC);
+                                    break;
+                                case PRIVATE:
+                                    typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PRIVATE);
+                                    break;
+                                case PROTECTED:
+                                    typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.PROTECTED);
+                                    break;
+                                case DEFAULT:
+                                    typeSystem.declareAccessSpecifier(field, AccessSpecifierEntity.DEFAULT);
+                                    break;
+                            }
 
-                        typeSystem.declareStatic(field, fieldDeclaration.isStatic() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
+                            typeSystem.declareStatic(field, fieldDeclaration.isStatic() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
 
-                        Type contained = (Type) entityMap.get(fieldType.getQualifiedName());
-                        if (contained != null)
-                            typeSystem.declareContains(type, contained);
+                            Type contained = (Type) entityMap.get(fieldType.getQualifiedName());
+                            if (contained != null)
+                                typeSystem.declareContains(type, contained);
                             typeSystem.declareReturns(field, contained);
+                        } catch (Exception ignored) {
                         }
-                        catch (Exception ignored) {}
-                });
+                    });
+                }
+                catch (Exception ignored) {}
 
 
                 // Get methods
@@ -267,8 +269,9 @@ public class JavaParserTypeSystemCreator {
                         methodDeclaration.findAll(MethodCallExpr.class).forEach(m -> {
                             try {
                                 Method called = (Method) entityMap.get(m.resolveInvokedMethod().getQualifiedName());
-                                if (called != null)
+                                if (called != null) {
                                     typeSystem.declareCalls(finalMethod, called);
+                                }
                             }
                             catch (Exception ignored) {}
                         });
@@ -277,8 +280,7 @@ public class JavaParserTypeSystemCreator {
                 });
 
             }
-            catch (Exception e) {
-                e.printStackTrace();
+            catch (Exception ignored) {
             }
         }));
 

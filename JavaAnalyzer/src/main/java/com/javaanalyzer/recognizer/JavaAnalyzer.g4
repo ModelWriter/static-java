@@ -1,21 +1,26 @@
 grammar JavaAnalyzer;
 
-whole           : line+;
+input           : line+;
 line		    : (declaration | formula) (NEWLINE)?;
-declaration	    : ('Class' | 'Interface' | 'Method' | 'Field') variable;
-variable	    : VAR;
-formula		    : '(' formula ')' | eq | in | not;
-expression	    : variable | join;
-join            : variable '.' variable | variable '.' join;
-eq		        : expression '=' expression;
-in		        : expression 'in' expression;
-not		        : '!' formula;
-/*closure		    : '^' expression;
-reflexiveclosure: '*' expression;*/
+declaration	    : type VAR;
+type           : 'Class' | 'Interface' | 'Method' | 'Field' | ('Object')?;
+formula		    : '(' formula ')'                   #PHARANTHESSEDFORMULA
+                    | expression '=' expression     #EQUAL
+                    | expression 'in' expression    #IN
+                    | '!' formula                   #NOT
+                    | formula '|' formula           #OR
+                    | formula '&' formula           #AND;
+expression	    :   VAR                             #VARIABLE
+                    | '(' expression ')'            #PHARANTHESSEDEXPRESSION
+                    | expression '.' expression     #JOIN
+                    | '*' expression                #REFLEXIVECLOSURE
+                    | '^' expression                #CLOSURE
+                    | expression '+' expression     #UNION
+                    ;
 
-fragment LOWERCASE  : [a-z];
-fragment UPPERCASE  : [A-Z];
+fragment ALPHA  : [a-zA-Z];
+fragment ALPHANUMERIC  : [a-zA-Z0-9];
 
 WHITESPACE              : (' ' | '\t')+ -> skip;
 NEWLINE                 : ('\r'? '\n' | '\r')+ ;
-VAR                     : (LOWERCASE | UPPERCASE | '_')+ ;
+VAR                     : ALPHA (ALPHANUMERIC | '_')+ ;

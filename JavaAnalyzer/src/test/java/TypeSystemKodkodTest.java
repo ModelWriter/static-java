@@ -13,9 +13,9 @@ public class TypeSystemKodkodTest {
 
         // Detection of composite pattern
         KodkodTranslator translator = new KodkodTranslator(typeSystem);
-        Relation composite = translator.add("Composite");
-        Relation component = translator.add("Component");
-        Relation leaf = translator.add("Leaf");
+        Relation composite = translator.addRelation("Composite");
+        Relation component = translator.addRelation("Component");
+        Relation leaf = translator.addRelation("Leaf");
         translator.addFormula(component.in(leaf.join(translator.EXTENDS)));
         translator.addFormula(component.in(composite.join(translator.EXTENDS)));
         translator.addFormula(composite.in(component.join(translator.CONTAINS)));
@@ -30,9 +30,9 @@ public class TypeSystemKodkodTest {
 
         // Detection of degenerate inheritance
         translator = new KodkodTranslator(typeSystem);
-        Relation superType = translator.add("Super");
-        Relation subType = translator.add("Sub");
-        Relation degSubType = translator.add("DegSub");
+        Relation superType = translator.addRelation("Super");
+        Relation subType = translator.addRelation("Sub");
+        Relation degSubType = translator.addRelation("DegSub");
         translator.addFormula(subType.in(degSubType.join(translator.EXTENDS.union(translator.IMPLEMENTS))));
         translator.addFormula(superType.in(degSubType.join(translator.EXTENDS.union(translator.IMPLEMENTS))));
         translator.addFormula(superType.in(subType.join(translator.EXTENDS.union(translator.IMPLEMENTS).closure())));
@@ -46,8 +46,8 @@ public class TypeSystemKodkodTest {
 
         // Detection of sub class knowledge
         translator = new KodkodTranslator(typeSystem);
-        Relation _superType = translator.add("Super");
-        Relation _subType = translator.add("Sub");
+        Relation _superType = translator.addRelation("Super");
+        Relation _subType = translator.addRelation("Sub");
         translator.addFormula(_superType.in(_subType.join(translator.EXTENDS.union(translator.IMPLEMENTS).closure())));
         translator.addFormula(_superType.in(_subType.join(translator.CONTAINS)));
         translator.solve();
@@ -59,8 +59,8 @@ public class TypeSystemKodkodTest {
 
         // Detection of singleton pattern
         translator = new KodkodTranslator(typeSystem);
-        Relation singleton = translator.add("Singleton");
-        Relation field = translator.add("StaticField");
+        Relation singleton = translator.addRelation("Singleton");
+        Relation field = translator.addRelation("StaticField");
 
         // Public !in Singleton.constructors.access
         translator.addFormula(translator.ACCESS_PUBLIC.in(singleton.join(translator.CONSTRUCTORS).join(translator.ACCESS_SPECIFIER)).not());

@@ -1,4 +1,4 @@
-// Generated from /home/harun/git/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer/JavaAnalyzer.g4 by ANTLR 4.7
+// Generated from C:/Users/Harun/Documents/GitHub/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer\JavaAnalyzer.g4 by ANTLR 4.7
 package com.javaanalyzer.recognizer;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -8,15 +8,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface JavaAnalyzerListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#whole}.
+	 * Enter a parse tree produced by {@link JavaAnalyzerParser#input}.
 	 * @param ctx the parse tree
 	 */
-	void enterWhole(JavaAnalyzerParser.WholeContext ctx);
+	void enterInput(JavaAnalyzerParser.InputContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#whole}.
+	 * Exit a parse tree produced by {@link JavaAnalyzerParser#input}.
 	 * @param ctx the parse tree
 	 */
-	void exitWhole(JavaAnalyzerParser.WholeContext ctx);
+	void exitInput(JavaAnalyzerParser.InputContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JavaAnalyzerParser#line}.
 	 * @param ctx the parse tree
@@ -38,73 +38,157 @@ public interface JavaAnalyzerListener extends ParseTreeListener {
 	 */
 	void exitDeclaration(JavaAnalyzerParser.DeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#variable}.
+	 * Enter a parse tree produced by {@link JavaAnalyzerParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariable(JavaAnalyzerParser.VariableContext ctx);
+	void enterType(JavaAnalyzerParser.TypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#variable}.
+	 * Exit a parse tree produced by {@link JavaAnalyzerParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariable(JavaAnalyzerParser.VariableContext ctx);
+	void exitType(JavaAnalyzerParser.TypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#formula}.
+	 * Enter a parse tree produced by the {@code NOT}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void enterFormula(JavaAnalyzerParser.FormulaContext ctx);
+	void enterNOT(JavaAnalyzerParser.NOTContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#formula}.
+	 * Exit a parse tree produced by the {@code NOT}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void exitFormula(JavaAnalyzerParser.FormulaContext ctx);
+	void exitNOT(JavaAnalyzerParser.NOTContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#expression}.
+	 * Enter a parse tree produced by the {@code OR}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(JavaAnalyzerParser.ExpressionContext ctx);
+	void enterOR(JavaAnalyzerParser.ORContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#expression}.
+	 * Exit a parse tree produced by the {@code OR}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(JavaAnalyzerParser.ExpressionContext ctx);
+	void exitOR(JavaAnalyzerParser.ORContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#join}.
+	 * Enter a parse tree produced by the {@code PHARANTHESSEDFORMULA}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void enterJoin(JavaAnalyzerParser.JoinContext ctx);
+	void enterPHARANTHESSEDFORMULA(JavaAnalyzerParser.PHARANTHESSEDFORMULAContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#join}.
+	 * Exit a parse tree produced by the {@code PHARANTHESSEDFORMULA}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void exitJoin(JavaAnalyzerParser.JoinContext ctx);
+	void exitPHARANTHESSEDFORMULA(JavaAnalyzerParser.PHARANTHESSEDFORMULAContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#eq}.
+	 * Enter a parse tree produced by the {@code IN}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void enterEq(JavaAnalyzerParser.EqContext ctx);
+	void enterIN(JavaAnalyzerParser.INContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#eq}.
+	 * Exit a parse tree produced by the {@code IN}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void exitEq(JavaAnalyzerParser.EqContext ctx);
+	void exitIN(JavaAnalyzerParser.INContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#in}.
+	 * Enter a parse tree produced by the {@code EQUAL}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void enterIn(JavaAnalyzerParser.InContext ctx);
+	void enterEQUAL(JavaAnalyzerParser.EQUALContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#in}.
+	 * Exit a parse tree produced by the {@code EQUAL}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void exitIn(JavaAnalyzerParser.InContext ctx);
+	void exitEQUAL(JavaAnalyzerParser.EQUALContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JavaAnalyzerParser#not}.
+	 * Enter a parse tree produced by the {@code AND}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void enterNot(JavaAnalyzerParser.NotContext ctx);
+	void enterAND(JavaAnalyzerParser.ANDContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JavaAnalyzerParser#not}.
+	 * Exit a parse tree produced by the {@code AND}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 */
-	void exitNot(JavaAnalyzerParser.NotContext ctx);
+	void exitAND(JavaAnalyzerParser.ANDContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PHARANTHESSEDEXPRESSION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PHARANTHESSEDEXPRESSION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code VARIABLE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code VARIABLE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code REFLEXIVECLOSURE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterREFLEXIVECLOSURE(JavaAnalyzerParser.REFLEXIVECLOSUREContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code REFLEXIVECLOSURE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitREFLEXIVECLOSURE(JavaAnalyzerParser.REFLEXIVECLOSUREContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code JOIN}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterJOIN(JavaAnalyzerParser.JOINContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code JOIN}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitJOIN(JavaAnalyzerParser.JOINContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code CLOSURE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code CLOSURE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code UNION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterUNION(JavaAnalyzerParser.UNIONContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code UNION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitUNION(JavaAnalyzerParser.UNIONContext ctx);
 }

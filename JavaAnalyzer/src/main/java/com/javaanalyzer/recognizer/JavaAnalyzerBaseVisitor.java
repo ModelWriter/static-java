@@ -1,4 +1,4 @@
-// Generated from /home/harun/git/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer/JavaAnalyzer.g4 by ANTLR 4.7
+// Generated from C:/Users/Harun/Documents/GitHub/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer\JavaAnalyzer.g4 by ANTLR 4.7
 package com.javaanalyzer.recognizer;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -17,7 +17,7 @@ public class JavaAnalyzerBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitWhole(JavaAnalyzerParser.WholeContext ctx) { return visitChildren(ctx); }
+	@Override public T visitInput(JavaAnalyzerParser.InputContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -38,47 +38,89 @@ public class JavaAnalyzerBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVariable(JavaAnalyzerParser.VariableContext ctx) { return visitChildren(ctx); }
+	@Override public T visitType(JavaAnalyzerParser.TypeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFormula(JavaAnalyzerParser.FormulaContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNOT(JavaAnalyzerParser.NOTContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExpression(JavaAnalyzerParser.ExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitOR(JavaAnalyzerParser.ORContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitJoin(JavaAnalyzerParser.JoinContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPHARANTHESSEDFORMULA(JavaAnalyzerParser.PHARANTHESSEDFORMULAContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitEq(JavaAnalyzerParser.EqContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIN(JavaAnalyzerParser.INContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIn(JavaAnalyzerParser.InContext ctx) { return visitChildren(ctx); }
+	@Override public T visitEQUAL(JavaAnalyzerParser.EQUALContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNot(JavaAnalyzerParser.NotContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAND(JavaAnalyzerParser.ANDContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitREFLEXIVECLOSURE(JavaAnalyzerParser.REFLEXIVECLOSUREContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitJOIN(JavaAnalyzerParser.JOINContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitUNION(JavaAnalyzerParser.UNIONContext ctx) { return visitChildren(ctx); }
 }

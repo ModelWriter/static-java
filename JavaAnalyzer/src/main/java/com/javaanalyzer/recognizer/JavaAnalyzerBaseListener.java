@@ -1,4 +1,4 @@
-// Generated from /home/harun/git/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer/JavaAnalyzer.g4 by ANTLR 4.7
+// Generated from C:/Users/Harun/Documents/GitHub/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer\JavaAnalyzer.g4 by ANTLR 4.7
 package com.javaanalyzer.recognizer;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -16,13 +16,13 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhole(JavaAnalyzerParser.WholeContext ctx) { }
+	@Override public void enterInput(JavaAnalyzerParser.InputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhole(JavaAnalyzerParser.WholeContext ctx) { }
+	@Override public void exitInput(JavaAnalyzerParser.InputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -52,85 +52,157 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariable(JavaAnalyzerParser.VariableContext ctx) { }
+	@Override public void enterType(JavaAnalyzerParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariable(JavaAnalyzerParser.VariableContext ctx) { }
+	@Override public void exitType(JavaAnalyzerParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFormula(JavaAnalyzerParser.FormulaContext ctx) { }
+	@Override public void enterNOT(JavaAnalyzerParser.NOTContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFormula(JavaAnalyzerParser.FormulaContext ctx) { }
+	@Override public void exitNOT(JavaAnalyzerParser.NOTContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpression(JavaAnalyzerParser.ExpressionContext ctx) { }
+	@Override public void enterOR(JavaAnalyzerParser.ORContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpression(JavaAnalyzerParser.ExpressionContext ctx) { }
+	@Override public void exitOR(JavaAnalyzerParser.ORContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterJoin(JavaAnalyzerParser.JoinContext ctx) { }
+	@Override public void enterPHARANTHESSEDFORMULA(JavaAnalyzerParser.PHARANTHESSEDFORMULAContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitJoin(JavaAnalyzerParser.JoinContext ctx) { }
+	@Override public void exitPHARANTHESSEDFORMULA(JavaAnalyzerParser.PHARANTHESSEDFORMULAContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEq(JavaAnalyzerParser.EqContext ctx) { }
+	@Override public void enterIN(JavaAnalyzerParser.INContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEq(JavaAnalyzerParser.EqContext ctx) { }
+	@Override public void exitIN(JavaAnalyzerParser.INContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIn(JavaAnalyzerParser.InContext ctx) { }
+	@Override public void enterEQUAL(JavaAnalyzerParser.EQUALContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIn(JavaAnalyzerParser.InContext ctx) { }
+	@Override public void exitEQUAL(JavaAnalyzerParser.EQUALContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNot(JavaAnalyzerParser.NotContext ctx) { }
+	@Override public void enterAND(JavaAnalyzerParser.ANDContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNot(JavaAnalyzerParser.NotContext ctx) { }
+	@Override public void exitAND(JavaAnalyzerParser.ANDContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterREFLEXIVECLOSURE(JavaAnalyzerParser.REFLEXIVECLOSUREContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitREFLEXIVECLOSURE(JavaAnalyzerParser.REFLEXIVECLOSUREContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterJOIN(JavaAnalyzerParser.JOINContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitJOIN(JavaAnalyzerParser.JOINContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUNION(JavaAnalyzerParser.UNIONContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUNION(JavaAnalyzerParser.UNIONContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

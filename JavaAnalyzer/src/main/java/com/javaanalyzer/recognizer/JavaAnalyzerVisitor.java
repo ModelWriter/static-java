@@ -1,4 +1,4 @@
-// Generated from /home/harun/git/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer/JavaAnalyzer.g4 by ANTLR 4.7
+// Generated from C:/Users/Harun/Documents/GitHub/static-java/JavaAnalyzer/src/main/java/com/javaanalyzer/recognizer\JavaAnalyzer.g4 by ANTLR 4.7
 package com.javaanalyzer.recognizer;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -11,11 +11,11 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface JavaAnalyzerVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#whole}.
+	 * Visit a parse tree produced by {@link JavaAnalyzerParser#input}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhole(JavaAnalyzerParser.WholeContext ctx);
+	T visitInput(JavaAnalyzerParser.InputContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JavaAnalyzerParser#line}.
 	 * @param ctx the parse tree
@@ -29,45 +29,93 @@ public interface JavaAnalyzerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(JavaAnalyzerParser.DeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#variable}.
+	 * Visit a parse tree produced by {@link JavaAnalyzerParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariable(JavaAnalyzerParser.VariableContext ctx);
+	T visitType(JavaAnalyzerParser.TypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#formula}.
+	 * Visit a parse tree produced by the {@code NOT}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFormula(JavaAnalyzerParser.FormulaContext ctx);
+	T visitNOT(JavaAnalyzerParser.NOTContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#expression}.
+	 * Visit a parse tree produced by the {@code OR}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpression(JavaAnalyzerParser.ExpressionContext ctx);
+	T visitOR(JavaAnalyzerParser.ORContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#join}.
+	 * Visit a parse tree produced by the {@code PHARANTHESSEDFORMULA}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitJoin(JavaAnalyzerParser.JoinContext ctx);
+	T visitPHARANTHESSEDFORMULA(JavaAnalyzerParser.PHARANTHESSEDFORMULAContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#eq}.
+	 * Visit a parse tree produced by the {@code IN}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEq(JavaAnalyzerParser.EqContext ctx);
+	T visitIN(JavaAnalyzerParser.INContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#in}.
+	 * Visit a parse tree produced by the {@code EQUAL}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIn(JavaAnalyzerParser.InContext ctx);
+	T visitEQUAL(JavaAnalyzerParser.EQUALContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JavaAnalyzerParser#not}.
+	 * Visit a parse tree produced by the {@code AND}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNot(JavaAnalyzerParser.NotContext ctx);
+	T visitAND(JavaAnalyzerParser.ANDContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PHARANTHESSEDEXPRESSION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code VARIABLE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code REFLEXIVECLOSURE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitREFLEXIVECLOSURE(JavaAnalyzerParser.REFLEXIVECLOSUREContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code JOIN}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJOIN(JavaAnalyzerParser.JOINContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code CLOSURE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code UNION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUNION(JavaAnalyzerParser.UNIONContext ctx);
 }

@@ -52,6 +52,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
     public final Relation RETURNS;
 
     private Map<String, Relation> relationMap;
+    private Set<Relation> variables;
 
     private Iterator<Solution> solutionIterator;
     private Solution currentSolution;
@@ -59,6 +60,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
     public KodkodTranslator(TypeSystem typeSystem) {
         formulas = new HashSet<>();
         relationMap = new HashMap<>();
+        variables = new HashSet<>();
         solutionIterator = null;
         currentSolution = null;
 
@@ -89,6 +91,29 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         METHODS = Relation.binary("methods");
         FIELDS = Relation.binary("fields");
         RETURNS = Relation.binary("returns");
+
+        relationMap.put(CLASS.name(), CLASS);
+        relationMap.put(INTERFACE.name(), INTERFACE);
+        relationMap.put(METHOD.name(), METHOD);
+        relationMap.put(CONSTRUCTOR.name(), CONSTRUCTOR);
+        relationMap.put(FIELD.name(), FIELD);
+        relationMap.put(BOOLEAN_TRUE.name(), BOOLEAN_TRUE);
+        relationMap.put(BOOLEAN_FALSE.name(), BOOLEAN_FALSE);
+        relationMap.put(ACCESS_PUBLIC.name(), ACCESS_PUBLIC);
+        relationMap.put(ACCESS_PRIVATE.name(), ACCESS_PRIVATE);
+        relationMap.put(ACCESS_PROTECTED.name(), ACCESS_PROTECTED);
+        relationMap.put(ACCESS_DEFAULT.name(), ACCESS_DEFAULT);
+        relationMap.put(EXTENDS.name(), EXTENDS);
+        relationMap.put(IMPLEMENTS.name(), IMPLEMENTS);
+        relationMap.put(CONTAINS.name(), CONTAINS);
+        relationMap.put(CALLS.name(), CALLS);
+        relationMap.put(ABSTRACT.name(), ABSTRACT);
+        relationMap.put(STATIC.name(), STATIC);
+        relationMap.put(ACCESS_SPECIFIER.name(), ACCESS_SPECIFIER);
+        relationMap.put(CONSTRUCTORS.name(), CONSTRUCTORS);
+        relationMap.put(METHODS.name(), METHODS);
+        relationMap.put(FIELDS.name(), FIELDS);
+        relationMap.put(RETURNS.name(), RETURNS);
 
         tupleFactory = universe.factory();
         bounds = new Bounds(universe);
@@ -193,27 +218,31 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         solver.options().setSymmetryBreaking(0);
     }
 
-    public Relation add(String name) {
-        Relation relation = createUnaryRelation(name);
-        if (relation != null) {
-            relationMap.put(name, relation);
-        }
-        return relation;
-    }
-
-    private Relation createUnaryRelation(String name) {
+    public Relation addRelation(String name) {
         if (relationMap.containsKey(name)) {
             return null;
         }
 
         Relation relation = Relation.unary(name);
+
+        relationMap.put(name, relation);
+        variables.add(relation);
+
         bounds.bound(relation, tupleFactory.allOf(1));
         formulas.add(relation.one());
         return relation;
     }
 
+    public Relation getRelation(String name) {
+        return relationMap.get(name);
+    }
+
     public void addFormula(Formula formula) {
         formulas.add(formula);
+    }
+
+    public Set<Formula> getFormulas() {
+        return formulas;
     }
 
     public void solve() {
@@ -237,8 +266,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         currentSolution = solutionIterator.next();
 
         return solution.instance().relationTuples().entrySet().stream()
-                .filter(e -> relationMap.containsValue(e.getKey()))
-                .filter(e -> !e.getValue().isEmpty())
+                .filter(e -> variables.contains(e.getKey()))
                 .collect(Collectors.toMap(e -> e.getKey().name(), e -> e.getValue().stream()
                         .filter(f -> f.atom(0) instanceof Entity)
                         .map(f -> (Entity) f.atom(0)).findFirst().orElse(null)));
