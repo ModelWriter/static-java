@@ -114,6 +114,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         relationMap.put(METHODS.name(), METHODS);
         relationMap.put(FIELDS.name(), FIELDS);
         relationMap.put(RETURNS.name(), RETURNS);
+        relationMap.put("type", RETURNS);
 
         tupleFactory = universe.factory();
         bounds = new Bounds(universe);
@@ -246,6 +247,8 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
     }
 
     public void solve() {
+        System.out.println(bounds);
+
         solutionIterator = solver.solveAll(Formula.and(formulas), bounds);
         currentSolution = solutionIterator.next();
     }

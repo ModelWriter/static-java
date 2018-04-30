@@ -107,6 +107,11 @@ public class JavaAnalyzerVisitorImpl extends JavaAnalyzerBaseVisitor<Node> {
     }
 
     @Override
+    public Node visitTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx) {
+        return ((Expression) visit(ctx.expression())).transpose();
+    }
+
+    @Override
     public Node visitJOIN(JavaAnalyzerParser.JOINContext ctx) {
         Expression expression1 = (Expression) visit(ctx.expression(0));
         Expression expression2 = (Expression) visit(ctx.expression(1));

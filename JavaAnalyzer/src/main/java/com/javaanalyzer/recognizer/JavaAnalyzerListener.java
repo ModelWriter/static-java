@@ -132,6 +132,18 @@ public interface JavaAnalyzerListener extends ParseTreeListener {
 	 */
 	void exitPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code TRANSPOSE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code TRANSPOSE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code VARIABLE}
 	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
 	 * @param ctx the parse tree

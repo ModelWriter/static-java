@@ -148,6 +148,18 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -4,14 +4,13 @@ import com.javaanalyzer.recognizer.JavaAnalyzerVisitorImpl;
 import com.javaanalyzer.solver.KodkodTranslator;
 import com.javaanalyzer.typecollector.JavaParserTypeSystemCreator;
 import com.javaanalyzer.typesystem.Entity;
+import com.javaanalyzer.typesystem.Field;
 import com.javaanalyzer.typesystem.TypeSystem;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,78 +60,116 @@ public class Demo {
         results.setEditable(false);
 
         textArea.setText(exampleInput);
-        textField.setText("C:\\ExamplePath");
+        textField.setText("C:\\Users\\Harun\\Documents\\GitHub\\static-java\\JavaAnalyzer\\src\\main\\java");
 
         frame.pack();
         frame.setVisible(true);
 
-        if (System.getenv().get("PROCESSOR_ARCHITECTURE").equals("x86"))
-            process(textField, textArea, results, button);
-        else {
+        /*if (System.getenv().get("PROCESSOR_ARCHITECTURE").equals("x86"))*/
+            new Demo().process(textField, textArea, results, button);
+        /*else {
             button.setEnabled(false);
             textArea.setEditable(false);
             textField.setEditable(false);
             results.setText("Please run the application using 32-bit Java SDK.");
-        }
+        }*/
     }
 
-    public static void process(TextField path, TextArea input, TextArea output, Button button) {
+    private boolean started = false;
+    private boolean stop = false;
+
+    public void process(TextField path, TextArea input, TextArea output, Button button) {
         button.addActionListener(e -> {
-            Thread thread = new Thread(() -> {
-                try {
-                    output.setText("");
 
-                    JavaParserTypeSystemCreator javaParserTypeSystemCollector = new JavaParserTypeSystemCreator(path.getText(), false);
-
-                    TypeSystem typeSystem = javaParserTypeSystemCollector.createTypeSystem();
-
-                    InputStream stream = new ByteArrayInputStream(input.getText().getBytes(StandardCharsets.UTF_8));
-
-                    JavaAnalyzerLexer lexer = null;
+            if (started) {
+                button.setLabel("Stopping...");
+                button.setEnabled(false);
+                started = false;
+                stop = true;
+            }
+            else {
+                Thread thread = new Thread(() -> {
                     try {
-                        lexer = new JavaAnalyzerLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                        started = true;
+                        stop = false;
+
+                        output.setText("");
+
+                        button.setLabel("Getting the root files... Click to stop.");
+
+                        JavaParserTypeSystemCreator javaParserTypeSystemCollector = new JavaParserTypeSystemCreator(path.getText(), true);
+
+                        if (stop) {
+                            return;
+                        }
+
+                        button.setLabel("Parsing java files... Click to stop.");
+
+                        TypeSystem typeSystem = javaParserTypeSystemCollector.createTypeSystem();
+
+                        InputStream stream = new ByteArrayInputStream(input.getText().getBytes(StandardCharsets.UTF_8));
+
+                        JavaAnalyzerLexer lexer = null;
+                        try {
+                            lexer = new JavaAnalyzerLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        assert lexer != null;
+                        JavaAnalyzerParser parser = new JavaAnalyzerParser(new CommonTokenStream(lexer));
+
+                        JavaAnalyzerVisitorImpl visitor = new JavaAnalyzerVisitorImpl(typeSystem);
+                        visitor.visit(parser.input());
+
+                        KodkodTranslator kodkodTranslator = visitor.getKodkodTranslator();
+
+                        kodkodTranslator.getFormulas().forEach(System.out::println);
+
+                        StringBuilder sb = new StringBuilder();
+
+                        sb.append("Formula:").append(System.lineSeparator()).append(System.lineSeparator())
+                                .append(kodkodTranslator.getFormulas().stream().map(Object::toString).
+                                        collect(Collectors.joining(System.lineSeparator())))
+                                .append(System.lineSeparator()).append(System.lineSeparator());
+
+                        if (stop){
+                            return;
+                        }
+
+                        button.setLabel("Solving... Click to stop.");
+
+                        try {
+                            kodkodTranslator.solve();
+                        } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
+                            unsatisfiedLinkError.printStackTrace();
+                            sb.append(unsatisfiedLinkError.getMessage());
+                        }
+
+                        while (kodkodTranslator.hasNext() && !stop) {
+                            Map<String, Entity> map = kodkodTranslator.next();
+                            System.out.println(map);
+                            sb.append(map.toString());
+                            sb.append(System.lineSeparator());
+                            output.setText(sb.toString());
+                        }
+
+                    } catch (Exception e12) {
+                        output.setText(e12.getMessage());
+                    } finally {
+                        if (stop)
+                            button.setLabel("Stopped, Find Pattern");
+                        else
+                            button.setLabel("Finished, Find Pattern");
+
+                        stop = false;
+                        started = false;
+
+                        button.setEnabled(true);
                     }
-                    assert lexer != null;
-                    JavaAnalyzerParser parser = new JavaAnalyzerParser(new CommonTokenStream(lexer));
+                });
 
-                    JavaAnalyzerVisitorImpl visitor = new JavaAnalyzerVisitorImpl(typeSystem);
-                    visitor.visit(parser.input());
-
-                    KodkodTranslator kodkodTranslator = visitor.getKodkodTranslator();
-
-                    kodkodTranslator.getFormulas().forEach(System.out::println);
-
-                    StringBuilder sb = new StringBuilder();
-
-                    sb.append("Formula:").append(System.lineSeparator()).append(System.lineSeparator())
-                            .append(kodkodTranslator.getFormulas().stream().map(Object::toString).
-                                    collect(Collectors.joining(System.lineSeparator())))
-                            .append(System.lineSeparator()).append(System.lineSeparator());
-
-                    try {
-                        kodkodTranslator.solve();
-                    }
-                    catch (UnsatisfiedLinkError unsatisfiedLinkError) {
-                        sb.append(unsatisfiedLinkError.getMessage());
-                    }
-
-                    while (kodkodTranslator.hasNext()) {
-                        Map<String, Entity> map = kodkodTranslator.next();
-                        System.out.println(map);
-                        sb.append(map.toString());
-                        sb.append(System.lineSeparator());
-                    }
-
-                    output.setText(sb.toString());
-                }
-                catch (Exception e12) {
-                    output.setText(e12.getMessage());
-                }
-            });
-
-            thread.start();
+                thread.start();
+            }
         });
     }
 

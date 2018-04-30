@@ -66,7 +66,7 @@ public class TypeSystem {
         graph.createEdge(CONTAINS, container, contained);
     }
 
-    public void declareCalls(Entity caller, Method called) {
+    public void declareCalls(Entity caller, Entity called) {
         graph.createEdge(CALLS, caller, called);
     }
 

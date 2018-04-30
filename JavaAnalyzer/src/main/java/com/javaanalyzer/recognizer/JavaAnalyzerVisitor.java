@@ -84,6 +84,13 @@ public interface JavaAnalyzerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPHARANTHESSEDEXPRESSION(JavaAnalyzerParser.PHARANTHESSEDEXPRESSIONContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code TRANSPOSE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code VARIABLE}
 	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
 	 * @param ctx the parse tree

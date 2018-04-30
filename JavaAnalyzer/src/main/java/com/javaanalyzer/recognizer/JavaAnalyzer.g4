@@ -16,6 +16,7 @@ expression	    :   VAR                             #VARIABLE
                     | '*' expression                #REFLEXIVECLOSURE
                     | '^' expression                #CLOSURE
                     | expression '+' expression     #UNION
+                    | '~' expression                #TRANSPOSE
                     ;
 
 fragment ALPHA  : [a-zA-Z];
@@ -23,4 +24,4 @@ fragment ALPHANUMERIC  : [a-zA-Z0-9];
 
 WHITESPACE              : (' ' | '\t')+ -> skip;
 NEWLINE                 : ('\r'? '\n' | '\r')+ ;
-VAR                     : ALPHA (ALPHANUMERIC | '_')+ ;
+VAR                     : ALPHA ((ALPHANUMERIC | '_')+)? ;

@@ -90,15 +90,16 @@ public class JavaParserTypeSystemCreator {
                 typeSystem.addEntity(type);
 
                 resolved.getDeclaredMethods().forEach(m -> {
-                    Method method = new Method(m.getQualifiedName(), type.getShortName() + "::" + m.getName());
-                    method.setLocation(path);
-                    entityMap.put(m.getQualifiedName(), method);
-                    typeSystem.addEntity(method);
+                    try {
+                        Method method = new Method(m.getQualifiedSignature(), type.getShortName() + "::" + m.getSignature());
+                        method.setLocation(path);
+                        entityMap.put(m.getQualifiedSignature(), method);
+                        typeSystem.addEntity(method);
+                    }
+                    catch (Exception ignored) { }
                 });
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            catch (Exception ignored) { }
         }));
 
         compilationUnits.forEach(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
@@ -214,7 +215,7 @@ public class JavaParserTypeSystemCreator {
 
                 // Get methods
                 resolved.getDeclaredMethods().forEach(m -> {
-                    Method method = (Method) entityMap.get(m.getQualifiedName());
+                    Method method = (Method) entityMap.get(m.getQualifiedSignature());
 
                     if (method == null)
                         return;
@@ -247,16 +248,14 @@ public class JavaParserTypeSystemCreator {
 
                         typeSystem.declareReturns(method, returnType);
                     }
-                    catch (Exception ignored) {
-
-                    }
+                    catch (Exception ignored) { }
                 });
 
                 // Get calls
                 declaration.findAll(MethodDeclaration.class).forEach(methodDeclaration -> {
                     try {
                         ResolvedMethodDeclaration resolvedMethodDeclaration = methodDeclaration.resolve();
-                        Method method = (Method) entityMap.get(resolvedMethodDeclaration.getQualifiedName());
+                        Method method = (Method) entityMap.get(resolvedMethodDeclaration.getQualifiedSignature());
 
                         if (method == null) {
                             method = (Method) entityMap.get(type.getFullName() + "." + resolvedMethodDeclaration.getName());
@@ -268,9 +267,17 @@ public class JavaParserTypeSystemCreator {
 
                         methodDeclaration.findAll(MethodCallExpr.class).forEach(m -> {
                             try {
-                                Method called = (Method) entityMap.get(m.resolveInvokedMethod().getQualifiedName());
+                                ResolvedMethodDeclaration rmd = m.resolveInvokedMethod();
+                                ResolvedReferenceTypeDeclaration rrtd = rmd.declaringType();
+
+                                Entity owner = entityMap.get(rrtd.getQualifiedName());
+                                Method called = (Method) entityMap.get(rmd.getQualifiedSignature());
+
                                 if (called != null) {
                                     typeSystem.declareCalls(finalMethod, called);
+                                }
+                                if (owner != null) {
+                                    typeSystem.declareCalls(type, owner);
                                 }
                             }
                             catch (Exception ignored) {}

@@ -29,6 +29,8 @@ public class Graph<N> {
     }
 
     public Edge<N, N> createEdge(EdgeType<N, N> edgeType, N source, N target) {
+        if (source == null || target == null)
+            return null;
         nodes.add(source);
         nodes.add(target);
         return edgeType.createEdge(source, target);
