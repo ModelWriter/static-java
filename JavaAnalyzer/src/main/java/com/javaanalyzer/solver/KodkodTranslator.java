@@ -6,10 +6,7 @@ import kodkod.ast.Relation;
 import kodkod.engine.Solution;
 import kodkod.engine.Solver;
 import kodkod.engine.satlab.SATFactory;
-import kodkod.instance.Bounds;
-import kodkod.instance.Tuple;
-import kodkod.instance.TupleFactory;
-import kodkod.instance.Universe;
+import kodkod.instance.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,6 +53,8 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
 
     private Iterator<Solution> solutionIterator;
     private Solution currentSolution;
+
+    private TupleSet possibleBound;
 
     public KodkodTranslator(TypeSystem typeSystem) {
         formulas = new HashSet<>();
@@ -119,36 +118,40 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         tupleFactory = universe.factory();
         bounds = new Bounds(universe);
 
-        Set<Type> classTuples = typeSystem.getEntities().stream()
+        Set<?> classTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof ClassType)
-                .map(e -> (Type) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(CLASS, classTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(classTuples.toArray()));
 
-        Set<Type> interfaceTuples = typeSystem.getEntities().stream()
+        Set<?> interfaceTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof InterfaceType)
-                .map(e -> (Type) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(INTERFACE, interfaceTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(interfaceTuples.toArray()));
 
-        Set<Method> methodTuples = typeSystem.getEntities().stream()
+        Set<?> methodTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof Method)
-                .map(e -> (Method) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(METHOD, methodTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(methodTuples.toArray()));
 
-        Set<Constructor> constructorTuples = typeSystem.getEntities().stream()
+        Set<?> constructorTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof Constructor)
-                .map(e -> (Constructor) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(CONSTRUCTOR, constructorTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(constructorTuples.toArray()));
 
-        Set<Field> fieldTuples = typeSystem.getEntities().stream()
+        Set<?> fieldTuples = typeSystem.getEntities().stream()
                 .filter(e -> e instanceof Field)
-                .map(e -> (Field) e)
                 .collect(Collectors.toSet());
         bounds.boundExactly(FIELD, fieldTuples.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(fieldTuples.toArray()));
 
+
+        Set<Object> possibleSet = new HashSet<>();
+        possibleSet.addAll(classTuples);
+        possibleSet.addAll(interfaceTuples);
+        possibleSet.addAll(methodTuples);
+        possibleSet.addAll(constructorTuples);
+        possibleSet.addAll(fieldTuples);
+
+        possibleBound = possibleSet.isEmpty() ? tupleFactory.noneOf(1) : tupleFactory.setOf(possibleSet.toArray());
 
         bounds.boundExactly(BOOLEAN_TRUE, tupleFactory.setOf(BooleanEntity.TRUE));
         bounds.boundExactly(BOOLEAN_FALSE, tupleFactory.setOf(BooleanEntity.FALSE));
@@ -229,7 +232,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         relationMap.put(name, relation);
         variables.add(relation);
 
-        bounds.bound(relation, tupleFactory.allOf(1));
+        bounds.bound(relation, possibleBound);
         formulas.add(relation.one());
         return relation;
     }
@@ -258,6 +261,10 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         if (solutionIterator == null)
             return false;
         return currentSolution.sat();
+    }
+
+    public Set<String> getVariableNames() {
+        return variables.stream().map(Relation::name).collect(Collectors.toSet());
     }
 
     @Override

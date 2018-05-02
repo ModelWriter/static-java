@@ -4,9 +4,12 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.ObjectCreationExpr;
+import com.github.javaparser.resolution.declarations.ResolvedConstructorDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
@@ -17,11 +20,13 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.github.javaparser.utils.SourceRoot;
+import com.javaanalyzer.gui.ProgressInformer;
 import com.javaanalyzer.typesystem.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class JavaParserTypeSystemCreator {
@@ -49,6 +54,12 @@ public class JavaParserTypeSystemCreator {
     }
 
     public TypeSystem createTypeSystem() {
+        return createTypeSystem(null);
+    }
+
+    public TypeSystem createTypeSystem(Consumer<Double> consumer) {
+
+        ProgressInformer progressInformer = new ProgressInformer(consumer == null ? (d) -> {} : consumer);
 
         TypeSystem typeSystem = new TypeSystem();
 
@@ -73,6 +84,9 @@ public class JavaParserTypeSystemCreator {
             e.printStackTrace();
             return typeSystem;
         }
+
+        progressInformer.init((int) compilationUnits.stream()
+                .mapToLong(e -> e.findAll(ClassOrInterfaceDeclaration.class).size()).sum() * 2);
 
         compilationUnits.forEach(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
             try {
@@ -100,6 +114,9 @@ public class JavaParserTypeSystemCreator {
                 });
             }
             catch (Exception ignored) { }
+            finally {
+                progressInformer.add();
+            }
         }));
 
         compilationUnits.forEach(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).forEach(declaration -> {
@@ -135,6 +152,8 @@ public class JavaParserTypeSystemCreator {
 
                         Constructor constructor = new Constructor(constructorDeclaration.getQualifiedSignature()
                                 , type.getShortName() + "::" + constructorDeclaration.getSignature());
+
+                        constructor.setLocation(type.getLocation());
 
                         switch (constructorDeclaration.accessSpecifier()) {
                             case PUBLIC:
@@ -212,7 +231,6 @@ public class JavaParserTypeSystemCreator {
                 }
                 catch (Exception ignored) {}
 
-
                 // Get methods
                 resolved.getDeclaredMethods().forEach(m -> {
                     Method method = (Method) entityMap.get(m.getQualifiedSignature());
@@ -264,7 +282,18 @@ public class JavaParserTypeSystemCreator {
                         }
 
                         final Method finalMethod = method;
+                        methodDeclaration.findAll(ObjectCreationExpr.class).forEach(c -> {
+                            try {
+                                ResolvedReferenceTypeDeclaration rrtd = c.calculateResolvedType().asReferenceType().getTypeDeclaration();
 
+                                Entity owner = entityMap.get(rrtd.getQualifiedName());
+
+                                if (owner != null) {
+                                    typeSystem.declareCalls(type, owner);
+                                }
+                            }
+                            catch (Exception ignored) {}
+                        });
                         methodDeclaration.findAll(MethodCallExpr.class).forEach(m -> {
                             try {
                                 ResolvedMethodDeclaration rmd = m.resolveInvokedMethod();
@@ -289,8 +318,12 @@ public class JavaParserTypeSystemCreator {
             }
             catch (Exception ignored) {
             }
+            finally {
+                progressInformer.add();
+            }
         }));
 
         return typeSystem;
     }
+
 }

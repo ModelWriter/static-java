@@ -5,23 +5,33 @@ import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.utils.SourceRoot;
+import com.javaanalyzer.gui.ProgressInformer;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class PackageRootFinder {
+    private ProgressInformer progressInformer;
     private List<File> allJavaFiles;
     private File file;
 
-    private PackageRootFinder(String path) {
+    private PackageRootFinder(String path, Consumer<Double> consumer) {
+        this.progressInformer = new ProgressInformer(consumer);
         file = new File(path);
         allJavaFiles = new ArrayList<>();
     }
 
     public static Set<String> getDirectories(String path) {
-        PackageRootFinder rootFinder = new PackageRootFinder(path);
+        PackageRootFinder rootFinder = new PackageRootFinder(path, (e) -> {});
+        return rootFinder.getAllRootDirectories();
+    }
+
+    public static Set<String> getDirectories(String path, Consumer<Double> consumer) {
+        PackageRootFinder rootFinder = new PackageRootFinder(path, consumer);
         return rootFinder.getAllRootDirectories();
     }
 
@@ -44,6 +54,8 @@ public class PackageRootFinder {
                 allJavaFiles.add(f);
             }
         }
+
+        progressInformer.init(allJavaFiles.size());
     }
 
     private Set<String> getAllRootDirectories(){
@@ -74,16 +86,20 @@ public class PackageRootFinder {
                     String[] s = compilationUnit.getPackageDeclaration().get().getNameAsString().split("\\.");
                     String packageHierarchy = Arrays.stream(s).collect(Collectors.joining(System.getProperty("file.separator")));
                     int index = f.getPath().indexOf(packageHierarchy);
-                    String str = f.getPath().substring(0, index - 1);
-                    allRootDirectoriesPath.add(str);
+                    if (index > 1) {
+                        String str = f.getPath().substring(0, index - 1);
+                        allRootDirectoriesPath.add(str);
+                    }
                 }
-
                 else {
                     allRootDirectoriesPath.add(f.getParent());
                 }
+
+                progressInformer.add();
             });
         }
 
         return allRootDirectoriesPath;
     }
+
 }
