@@ -112,6 +112,37 @@ public class JavaParserTypeSystemCreator {
                     }
                     catch (Exception ignored) { }
                 });
+
+                if (resolved instanceof JavaParserClassDeclaration) {
+                    ((JavaParserClassDeclaration) resolved).getConstructors().forEach(constructorDeclaration -> {
+
+                        Constructor constructor = new Constructor(constructorDeclaration.getQualifiedSignature()
+                                , type.getShortName() + "::" + constructorDeclaration.getSignature());
+
+                        entityMap.put(constructorDeclaration.getQualifiedSignature(), constructor);
+
+                        constructor.setLocation(type.getLocation());
+
+                        switch (constructorDeclaration.accessSpecifier()) {
+                            case PUBLIC:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PUBLIC);
+                                break;
+                            case PRIVATE:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PRIVATE);
+                                break;
+                            case PROTECTED:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PROTECTED);
+                                break;
+                            case DEFAULT:
+                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.DEFAULT);
+                                break;
+                        }
+
+                        if (type instanceof ClassType) {
+                            typeSystem.declareConstructors((ClassType) type, constructor);
+                        }
+                    });
+                }
             }
             catch (Exception ignored) { }
             finally {
@@ -147,35 +178,6 @@ public class JavaParserTypeSystemCreator {
                             });
                 }
 
-                if (resolved instanceof JavaParserClassDeclaration) {
-                    ((JavaParserClassDeclaration) resolved).getConstructors().forEach(constructorDeclaration -> {
-
-                        Constructor constructor = new Constructor(constructorDeclaration.getQualifiedSignature()
-                                , type.getShortName() + "::" + constructorDeclaration.getSignature());
-
-                        constructor.setLocation(type.getLocation());
-
-                        switch (constructorDeclaration.accessSpecifier()) {
-                            case PUBLIC:
-                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PUBLIC);
-                                break;
-                            case PRIVATE:
-                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PRIVATE);
-                                break;
-                            case PROTECTED:
-                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.PROTECTED);
-                                break;
-                            case DEFAULT:
-                                typeSystem.declareAccessSpecifier(constructor, AccessSpecifierEntity.DEFAULT);
-                                break;
-                        }
-
-                        if (type instanceof ClassType) {
-                            typeSystem.declareConstructors((ClassType) type, constructor);
-                        }
-                    });
-                }
-
                 if (declaration.isPrivate()) {
                     typeSystem.declareAccessSpecifier(type, AccessSpecifierEntity.PRIVATE);
                 }
@@ -194,7 +196,7 @@ public class JavaParserTypeSystemCreator {
                 }
 
                 try {
-                    resolved.getAllFields().forEach(fieldDeclaration -> {
+                    resolved.getDeclaredFields().forEach(fieldDeclaration -> {
                         try {
                             ResolvedReferenceTypeDeclaration fieldType = fieldDeclaration.getType().asReferenceType().getTypeDeclaration();
 
@@ -284,10 +286,15 @@ public class JavaParserTypeSystemCreator {
                         final Method finalMethod = method;
                         methodDeclaration.findAll(ObjectCreationExpr.class).forEach(c -> {
                             try {
-                                ResolvedReferenceTypeDeclaration rrtd = c.calculateResolvedType().asReferenceType().getTypeDeclaration();
+                                ResolvedConstructorDeclaration rcd = c.resolveInvokedConstructor();
+                                ResolvedReferenceTypeDeclaration rrtd = rcd.declaringType();
 
+                                Entity cons = entityMap.get(rcd.getQualifiedSignature());
                                 Entity owner = entityMap.get(rrtd.getQualifiedName());
 
+                                if (cons != null) {
+                                    typeSystem.declareCalls(finalMethod, cons);
+                                }
                                 if (owner != null) {
                                     typeSystem.declareCalls(type, owner);
                                 }

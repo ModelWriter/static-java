@@ -94,9 +94,9 @@ public class PackageRootFinder {
                 else {
                     allRootDirectoriesPath.add(f.getParent());
                 }
-
-                progressInformer.add();
             });
+
+            progressInformer.add();
         }
 
         return allRootDirectoriesPath;

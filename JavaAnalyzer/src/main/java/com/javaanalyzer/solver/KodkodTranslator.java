@@ -250,8 +250,6 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
     }
 
     public void solve() {
-        System.out.println(bounds);
-
         solutionIterator = solver.solveAll(Formula.and(formulas), bounds);
         currentSolution = solutionIterator.next();
     }

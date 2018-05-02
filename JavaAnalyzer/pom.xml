@@ -42,13 +42,7 @@
         <dependency>
             <groupId>com.github.javaparser</groupId>
             <artifactId>javaparser-symbol-solver-core</artifactId>
-            <version>3.5.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sat4j</groupId>
-            <artifactId>org.sat4j.core</artifactId>
-            <version>2.3.1</version>
-            <scope>compile</scope>
+            <version>3.6.3</version>
         </dependency>
         <dependency>
             <groupId>kodkod</groupId>
