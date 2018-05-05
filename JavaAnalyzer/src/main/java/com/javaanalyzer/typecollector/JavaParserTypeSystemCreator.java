@@ -2,6 +2,7 @@ package com.javaanalyzer.typecollector;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
+import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
@@ -25,6 +26,7 @@ import com.javaanalyzer.typesystem.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -69,7 +71,7 @@ public class JavaParserTypeSystemCreator {
         JavaSymbolSolver symbolSolver = new JavaSymbolSolver(combinedTypeSolver);
         JavaParser.getStaticConfiguration().setSymbolResolver(symbolSolver);
 
-        SourceRoot sourceRoot = new SourceRoot(new File(path).toPath(), JavaParser.getStaticConfiguration());
+        SourceRoot sourceRoot = new OurSourceRoot(new File(path).toPath(), JavaParser.getStaticConfiguration());
         List<CompilationUnit> compilationUnits;
 
         try {

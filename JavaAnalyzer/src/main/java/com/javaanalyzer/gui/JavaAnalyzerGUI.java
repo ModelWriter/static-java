@@ -1,5 +1,6 @@
 package com.javaanalyzer.gui;
 
+import com.javaanalyzer.patterns.Patterns;
 import com.javaanalyzer.typecollector.JavaParserTypeSystemCreator;
 import com.javaanalyzer.typecollector.PackageRootFinder;
 import com.javaanalyzer.typesystem.TypeSystem;
@@ -194,6 +195,12 @@ public class JavaAnalyzerGUI extends javax.swing.JFrame {
             return;
         }
 
+        addRootButton.setEnabled(false);
+        removeRootButton.setEnabled(false);
+        selectFolderButton.setEnabled(false);
+        doneButton.setEnabled(false);
+        doneButton.setText("Processing...");
+
         Thread thread = new Thread(() -> {
             JavaParserTypeSystemCreator typeSystemCreator = new JavaParserTypeSystemCreator(path, false);
             rootVector.forEach(typeSystemCreator::addPackagePath);
@@ -204,6 +211,12 @@ public class JavaAnalyzerGUI extends javax.swing.JFrame {
 
             progressBar.setValue(0);
 
+            addRootButton.setEnabled(true);
+            removeRootButton.setEnabled(true);
+            selectFolderButton.setEnabled(true);
+            doneButton.setEnabled(true);
+            doneButton.setText("Done");
+
             this.setVisible(false);
             new PatternFinderGUI(this, path, typeSystem).setVisible(true);
         });
@@ -213,6 +226,7 @@ public class JavaAnalyzerGUI extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         try {
+            Patterns.readPatterns();
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
