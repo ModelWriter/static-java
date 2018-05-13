@@ -41,6 +41,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
     public final Relation CONTAINS;
     public final Relation CALLS;
     public final Relation ABSTRACT;
+    public final Relation FINAL;
     public final Relation STATIC;
     public final Relation ACCESS_SPECIFIER;
     public final Relation CONSTRUCTORS;
@@ -84,6 +85,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         CONTAINS = Relation.binary("contains");
         CALLS = Relation.binary("calls");
         ABSTRACT = Relation.binary("abstract");
+        FINAL = Relation.binary("final");
         STATIC = Relation.binary("static");
         ACCESS_SPECIFIER = Relation.binary("access");
         CONSTRUCTORS = Relation.binary("constructors");
@@ -107,6 +109,7 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
         relationMap.put(CONTAINS.name(), CONTAINS);
         relationMap.put(CALLS.name(), CALLS);
         relationMap.put(ABSTRACT.name(), ABSTRACT);
+        relationMap.put(FINAL.name(), FINAL);
         relationMap.put(STATIC.name(), STATIC);
         relationMap.put(ACCESS_SPECIFIER.name(), ACCESS_SPECIFIER);
         relationMap.put(CONSTRUCTORS.name(), CONSTRUCTORS);
@@ -186,6 +189,11 @@ public class KodkodTranslator implements Iterator<Map<String, Entity>> {
                 .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
                 .collect(Collectors.toSet());
         bounds.boundExactly(ABSTRACT, abstractTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(abstractTuples));
+
+        Set<Tuple> finalTuples = typeSystem.getFinal().getEdges().stream()
+                .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))
+                .collect(Collectors.toSet());
+        bounds.boundExactly(FINAL, finalTuples.isEmpty() ? tupleFactory.noneOf(2) : tupleFactory.setOf(finalTuples));
 
         Set<Tuple> staticTuples = typeSystem.getStatic().getEdges().stream()
                 .map(e -> tupleFactory.tuple(e.getSource(), e.getTarget()))

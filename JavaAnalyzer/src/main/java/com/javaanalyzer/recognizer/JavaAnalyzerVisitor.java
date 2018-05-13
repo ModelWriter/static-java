@@ -35,6 +35,20 @@ public interface JavaAnalyzerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitType(JavaAnalyzerParser.TypeContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code NO}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNO(JavaAnalyzerParser.NOContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code SOME}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSOME(JavaAnalyzerParser.SOMEContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code NOT}
 	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
@@ -70,12 +84,26 @@ public interface JavaAnalyzerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEQUAL(JavaAnalyzerParser.EQUALContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ONE}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitONE(JavaAnalyzerParser.ONEContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code AND}
 	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAND(JavaAnalyzerParser.ANDContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LONE}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLONE(JavaAnalyzerParser.LONEContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code PHARANTHESSEDEXPRESSION}
 	 * labeled alternative in {@link JavaAnalyzerParser#expression}.

@@ -16,6 +16,7 @@ import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclar
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserClassDeclaration;
+import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserFieldDeclaration;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
@@ -49,6 +50,13 @@ public class JavaParserTypeSystemCreator {
 
     public void addPackagePath(String dir) {
         combinedTypeSolver.add(new JavaParserTypeSolver(new File(dir)));
+        getJarFiles(new File(dir)).forEach(f -> {
+            try {
+                addJarPath(f.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void addJarPath(String dir) throws IOException {
@@ -95,7 +103,7 @@ public class JavaParserTypeSystemCreator {
                 ResolvedReferenceTypeDeclaration resolved = declaration.resolve();
                 Type type = declaration.isInterface()
                         ? new InterfaceType(resolved.getQualifiedName(), resolved.getClassName())
-                        : new ClassType(resolved.getQualifiedName(), resolved.getClassName(), declaration.isAbstract());
+                        : new ClassType(resolved.getQualifiedName(), resolved.getClassName());
 
                 String path = cu.getStorage().map(e -> e.getPath().toString()).orElse("");
 
@@ -193,9 +201,9 @@ public class JavaParserTypeSystemCreator {
                     typeSystem.declareAccessSpecifier(type, AccessSpecifierEntity.DEFAULT);
                 }
 
-                if (declaration.isAbstract()) {
-                    typeSystem.declareAbstract(type, BooleanEntity.TRUE);
-                }
+                typeSystem.declareFinal(type, declaration.isFinal() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
+                typeSystem.declareAbstract(type, declaration.isAbstract() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
+
 
                 try {
                     resolved.getDeclaredFields().forEach(fieldDeclaration -> {
@@ -226,9 +234,12 @@ public class JavaParserTypeSystemCreator {
                             typeSystem.declareStatic(field, fieldDeclaration.isStatic() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
 
                             Type contained = (Type) entityMap.get(fieldType.getQualifiedName());
-                            if (contained != null)
+                            if (contained != null) {
                                 typeSystem.declareContains(type, contained);
-                            typeSystem.declareReturns(field, contained);
+                                typeSystem.declareReturns(field, contained);
+                            }
+
+                            typeSystem.declareFinal(field, ((JavaParserFieldDeclaration) fieldDeclaration).getWrappedNode().isFinal() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
                         } catch (Exception ignored) {
                         }
                     });
@@ -333,6 +344,31 @@ public class JavaParserTypeSystemCreator {
         }));
 
         return typeSystem;
+    }
+
+    private  Set<File> getJarFiles(File file) {
+        Set<File> jarFiles = new HashSet<>();
+
+        File[] files;
+        try {
+            files = file.listFiles();
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            return jarFiles;
+        }
+
+        assert files != null;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                jarFiles.addAll(getJarFiles(f));
+            } else if (f.getName().endsWith(".jar")) {
+                f = f.getAbsoluteFile();
+                jarFiles.add(f);
+            }
+        }
+
+        return jarFiles;
     }
 
 }

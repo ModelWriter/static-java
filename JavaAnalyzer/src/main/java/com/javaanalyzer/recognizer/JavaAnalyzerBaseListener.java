@@ -64,6 +64,30 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNO(JavaAnalyzerParser.NOContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNO(JavaAnalyzerParser.NOContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSOME(JavaAnalyzerParser.SOMEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSOME(JavaAnalyzerParser.SOMEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNOT(JavaAnalyzerParser.NOTContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -124,6 +148,18 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterONE(JavaAnalyzerParser.ONEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitONE(JavaAnalyzerParser.ONEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAND(JavaAnalyzerParser.ANDContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -131,6 +167,18 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAND(JavaAnalyzerParser.ANDContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLONE(JavaAnalyzerParser.LONEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLONE(JavaAnalyzerParser.LONEContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

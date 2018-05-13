@@ -142,4 +142,28 @@ public class JavaAnalyzerVisitorImpl extends JavaAnalyzerBaseVisitor<Node> {
         return visit(ctx.expression());
     }
 
+    @Override
+    public Node visitNO(JavaAnalyzerParser.NOContext ctx) {
+        Expression expression = (Expression) visit(ctx.expression());
+        return expression.no();
+    }
+
+    @Override
+    public Node visitLONE(JavaAnalyzerParser.LONEContext ctx) {
+        Expression expression = (Expression) visit(ctx.expression());
+        return expression.lone();
+    }
+
+    @Override
+    public Node visitONE(JavaAnalyzerParser.ONEContext ctx) {
+        Expression expression = (Expression) visit(ctx.expression());
+        return expression.one();
+    }
+
+    @Override
+    public Node visitSOME(JavaAnalyzerParser.SOMEContext ctx) {
+        Expression expression = (Expression) visit(ctx.expression());
+        return expression.some();
+    }
+
 }

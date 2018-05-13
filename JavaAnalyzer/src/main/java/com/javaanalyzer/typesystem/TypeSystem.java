@@ -15,6 +15,7 @@ public class TypeSystem {
     private EdgeType<Entity, Entity> CONTAINS;
     private EdgeType<Entity, Entity> CALLS;
     private EdgeType<Entity, Entity> ABSTRACT;
+    private EdgeType<Entity, Entity> FINAL;
     private EdgeType<Entity, Entity> CONSTRUCTORS;
     private EdgeType<Entity, Entity> METHODS;
     private EdgeType<Entity, Entity> FIELDS;
@@ -30,6 +31,7 @@ public class TypeSystem {
         CONTAINS = graph.createEdgeType("CONTAINS");
         CALLS = graph.createEdgeType("CALLS");
         ABSTRACT = graph.createEdgeType("ABSTRACT");
+        FINAL = graph.createEdgeType("FINAL");
         CONSTRUCTORS = graph.createEdgeType("CONSTRUCTORS");
         METHODS = graph.createEdgeType("METHODS");
         FIELDS = graph.createEdgeType("FIELDS");
@@ -72,6 +74,10 @@ public class TypeSystem {
 
     public void declareAbstract(Entity entity, BooleanEntity booleanEntity) {
         graph.createEdge(ABSTRACT, entity, booleanEntity);
+    }
+
+    public void declareFinal(Entity entity, BooleanEntity booleanEntity) {
+        graph.createEdge(FINAL, entity, booleanEntity);
     }
 
     public void declareConstructors(ClassType type, Constructor constructor) {
@@ -136,6 +142,10 @@ public class TypeSystem {
 
     public EdgeType<Entity, Entity> getAccessSpecifier() {
         return ACCESS_SPECIFIER;
+    }
+
+    public EdgeType<Entity, Entity> getFinal() {
+        return FINAL;
     }
 
     public EdgeType<Entity, Entity> getStatic() {

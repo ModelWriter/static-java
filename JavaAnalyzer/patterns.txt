@@ -1,0 +1,6 @@
+Subtype Knowledge {
+superType
+subType
+superType in subType.^(extends + implements)
+subType in superType.*(contains + calls + extends + implements)
+}

@@ -48,6 +48,30 @@ public interface JavaAnalyzerListener extends ParseTreeListener {
 	 */
 	void exitType(JavaAnalyzerParser.TypeContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code NO}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void enterNO(JavaAnalyzerParser.NOContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NO}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void exitNO(JavaAnalyzerParser.NOContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code SOME}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void enterSOME(JavaAnalyzerParser.SOMEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code SOME}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void exitSOME(JavaAnalyzerParser.SOMEContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code NOT}
 	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
@@ -108,6 +132,18 @@ public interface JavaAnalyzerListener extends ParseTreeListener {
 	 */
 	void exitEQUAL(JavaAnalyzerParser.EQUALContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ONE}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void enterONE(JavaAnalyzerParser.ONEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ONE}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void exitONE(JavaAnalyzerParser.ONEContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code AND}
 	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
 	 * @param ctx the parse tree
@@ -119,6 +155,18 @@ public interface JavaAnalyzerListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAND(JavaAnalyzerParser.ANDContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code LONE}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void enterLONE(JavaAnalyzerParser.LONEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code LONE}
+	 * labeled alternative in {@link JavaAnalyzerParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void exitLONE(JavaAnalyzerParser.LONEContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code PHARANTHESSEDEXPRESSION}
 	 * labeled alternative in {@link JavaAnalyzerParser#expression}.

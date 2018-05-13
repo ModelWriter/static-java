@@ -19,7 +19,7 @@ public class JavaAnalyzerParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		WHITESPACE=18, NEWLINE=19, VAR=20;
+		T__17=18, T__18=19, T__19=20, T__20=21, WHITESPACE=22, NEWLINE=23, VAR=24;
 	public static final int
 		RULE_input = 0, RULE_line = 1, RULE_declaration = 2, RULE_type = 3, RULE_formula = 4, 
 		RULE_expression = 5;
@@ -29,12 +29,13 @@ public class JavaAnalyzerParser extends Parser {
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'Class'", "'Interface'", "'Method'", "'Field'", "'Object'", "'('", 
-		"')'", "'='", "'in'", "'!'", "'|'", "'&'", "'.'", "'*'", "'^'", "'+'", 
-		"'~'"
+		"')'", "'='", "'in'", "'no'", "'some'", "'one'", "'lone'", "'!'", "'||'", 
+		"'&&'", "'.'", "'*'", "'^'", "'+'", "'~'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, "WHITESPACE", "NEWLINE", "VAR"
+		null, null, null, null, null, null, null, null, null, null, "WHITESPACE", 
+		"NEWLINE", "VAR"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -131,7 +132,7 @@ public class JavaAnalyzerParser extends Parser {
 				setState(15); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__9) | (1L << T__13) | (1L << T__14) | (1L << T__16) | (1L << VAR))) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__17) | (1L << T__18) | (1L << T__20) | (1L << VAR))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -363,6 +364,44 @@ public class JavaAnalyzerParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class NOContext extends FormulaContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public NOContext(FormulaContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).enterNO(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).exitNO(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JavaAnalyzerVisitor ) return ((JavaAnalyzerVisitor<? extends T>)visitor).visitNO(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class SOMEContext extends FormulaContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public SOMEContext(FormulaContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).enterSOME(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).exitSOME(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JavaAnalyzerVisitor ) return ((JavaAnalyzerVisitor<? extends T>)visitor).visitSOME(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class NOTContext extends FormulaContext {
 		public FormulaContext formula() {
 			return getRuleContext(FormulaContext.class,0);
@@ -467,6 +506,25 @@ public class JavaAnalyzerParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class ONEContext extends FormulaContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ONEContext(FormulaContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).enterONE(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).exitONE(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JavaAnalyzerVisitor ) return ((JavaAnalyzerVisitor<? extends T>)visitor).visitONE(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class ANDContext extends FormulaContext {
 		public List<FormulaContext> formula() {
 			return getRuleContexts(FormulaContext.class);
@@ -489,6 +547,25 @@ public class JavaAnalyzerParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class LONEContext extends FormulaContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public LONEContext(FormulaContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).enterLONE(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JavaAnalyzerListener ) ((JavaAnalyzerListener)listener).exitLONE(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JavaAnalyzerVisitor ) return ((JavaAnalyzerVisitor<? extends T>)visitor).visitLONE(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 
 	public final FormulaContext formula() throws RecognitionException {
 		return formula(0);
@@ -505,7 +582,7 @@ public class JavaAnalyzerParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(51);
+			setState(59);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
@@ -550,18 +627,62 @@ public class JavaAnalyzerParser extends Parser {
 				break;
 			case 4:
 				{
-				_localctx = new NOTContext(_localctx);
+				_localctx = new NOContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(49);
 				match(T__9);
 				setState(50);
+				expression(0);
+				}
+				break;
+			case 5:
+				{
+				_localctx = new SOMEContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(51);
+				match(T__10);
+				setState(52);
+				expression(0);
+				}
+				break;
+			case 6:
+				{
+				_localctx = new ONEContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(53);
+				match(T__11);
+				setState(54);
+				expression(0);
+				}
+				break;
+			case 7:
+				{
+				_localctx = new LONEContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(55);
+				match(T__12);
+				setState(56);
+				expression(0);
+				}
+				break;
+			case 8:
+				{
+				_localctx = new NOTContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(57);
+				match(T__13);
+				setState(58);
 				formula(3);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(61);
+			setState(69);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -569,18 +690,18 @@ public class JavaAnalyzerParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(59);
+					setState(67);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 					case 1:
 						{
 						_localctx = new ORContext(new FormulaContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_formula);
-						setState(53);
+						setState(61);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(54);
-						match(T__10);
-						setState(55);
+						setState(62);
+						match(T__14);
+						setState(63);
 						formula(3);
 						}
 						break;
@@ -588,18 +709,18 @@ public class JavaAnalyzerParser extends Parser {
 						{
 						_localctx = new ANDContext(new FormulaContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_formula);
-						setState(56);
+						setState(64);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(57);
-						match(T__11);
-						setState(58);
+						setState(65);
+						match(T__15);
+						setState(66);
 						formula(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(63);
+				setState(71);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
@@ -780,7 +901,7 @@ public class JavaAnalyzerParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(76);
+			setState(84);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case VAR:
@@ -789,7 +910,7 @@ public class JavaAnalyzerParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(65);
+				setState(73);
 				match(VAR);
 				}
 				break;
@@ -798,44 +919,44 @@ public class JavaAnalyzerParser extends Parser {
 				_localctx = new PHARANTHESSEDEXPRESSIONContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(66);
+				setState(74);
 				match(T__5);
-				setState(67);
+				setState(75);
 				expression(0);
-				setState(68);
+				setState(76);
 				match(T__6);
 				}
 				break;
-			case T__13:
+			case T__17:
 				{
 				_localctx = new REFLEXIVECLOSUREContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(70);
-				match(T__13);
-				setState(71);
+				setState(78);
+				match(T__17);
+				setState(79);
 				expression(4);
 				}
 				break;
-			case T__14:
+			case T__18:
 				{
 				_localctx = new CLOSUREContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(72);
-				match(T__14);
-				setState(73);
+				setState(80);
+				match(T__18);
+				setState(81);
 				expression(3);
 				}
 				break;
-			case T__16:
+			case T__20:
 				{
 				_localctx = new TRANSPOSEContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(74);
-				match(T__16);
-				setState(75);
+				setState(82);
+				match(T__20);
+				setState(83);
 				expression(1);
 				}
 				break;
@@ -843,7 +964,7 @@ public class JavaAnalyzerParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(86);
+			setState(94);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -851,18 +972,18 @@ public class JavaAnalyzerParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(84);
+					setState(92);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 					case 1:
 						{
 						_localctx = new JOINContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(78);
+						setState(86);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(79);
-						match(T__12);
-						setState(80);
+						setState(87);
+						match(T__16);
+						setState(88);
 						expression(6);
 						}
 						break;
@@ -870,18 +991,18 @@ public class JavaAnalyzerParser extends Parser {
 						{
 						_localctx = new UNIONContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(81);
+						setState(89);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(82);
-						match(T__15);
-						setState(83);
+						setState(90);
+						match(T__19);
+						setState(91);
 						expression(3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(88);
+				setState(96);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
 			}
@@ -927,31 +1048,33 @@ public class JavaAnalyzerParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\26\\\4\2\t\2\4\3"+
-		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n\2\r\2\16\2\21\3\3\3"+
-		"\3\5\3\26\n\3\3\3\5\3\31\n\3\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\5\5#\n\5"+
-		"\5\5%\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
-		"\5\6\66\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6>\n\6\f\6\16\6A\13\6\3\7\3\7\3"+
-		"\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7O\n\7\3\7\3\7\3\7\3\7\3\7\3"+
-		"\7\7\7W\n\7\f\7\16\7Z\13\7\3\7\2\4\n\f\b\2\4\6\b\n\f\2\2\2h\2\17\3\2\2"+
-		"\2\4\25\3\2\2\2\6\32\3\2\2\2\b$\3\2\2\2\n\65\3\2\2\2\fN\3\2\2\2\16\20"+
-		"\5\4\3\2\17\16\3\2\2\2\20\21\3\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\3"+
-		"\3\2\2\2\23\26\5\6\4\2\24\26\5\n\6\2\25\23\3\2\2\2\25\24\3\2\2\2\26\30"+
-		"\3\2\2\2\27\31\7\25\2\2\30\27\3\2\2\2\30\31\3\2\2\2\31\5\3\2\2\2\32\33"+
-		"\5\b\5\2\33\34\7\26\2\2\34\7\3\2\2\2\35%\7\3\2\2\36%\7\4\2\2\37%\7\5\2"+
-		"\2 %\7\6\2\2!#\7\7\2\2\"!\3\2\2\2\"#\3\2\2\2#%\3\2\2\2$\35\3\2\2\2$\36"+
-		"\3\2\2\2$\37\3\2\2\2$ \3\2\2\2$\"\3\2\2\2%\t\3\2\2\2&\'\b\6\1\2\'(\7\b"+
-		"\2\2()\5\n\6\2)*\7\t\2\2*\66\3\2\2\2+,\5\f\7\2,-\7\n\2\2-.\5\f\7\2.\66"+
-		"\3\2\2\2/\60\5\f\7\2\60\61\7\13\2\2\61\62\5\f\7\2\62\66\3\2\2\2\63\64"+
-		"\7\f\2\2\64\66\5\n\6\5\65&\3\2\2\2\65+\3\2\2\2\65/\3\2\2\2\65\63\3\2\2"+
-		"\2\66?\3\2\2\2\678\f\4\2\289\7\r\2\29>\5\n\6\5:;\f\3\2\2;<\7\16\2\2<>"+
-		"\5\n\6\4=\67\3\2\2\2=:\3\2\2\2>A\3\2\2\2?=\3\2\2\2?@\3\2\2\2@\13\3\2\2"+
-		"\2A?\3\2\2\2BC\b\7\1\2CO\7\26\2\2DE\7\b\2\2EF\5\f\7\2FG\7\t\2\2GO\3\2"+
-		"\2\2HI\7\20\2\2IO\5\f\7\6JK\7\21\2\2KO\5\f\7\5LM\7\23\2\2MO\5\f\7\3NB"+
-		"\3\2\2\2ND\3\2\2\2NH\3\2\2\2NJ\3\2\2\2NL\3\2\2\2OX\3\2\2\2PQ\f\7\2\2Q"+
-		"R\7\17\2\2RW\5\f\7\bST\f\4\2\2TU\7\22\2\2UW\5\f\7\5VP\3\2\2\2VS\3\2\2"+
-		"\2WZ\3\2\2\2XV\3\2\2\2XY\3\2\2\2Y\r\3\2\2\2ZX\3\2\2\2\r\21\25\30\"$\65"+
-		"=?NVX";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\32d\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n\2\r\2\16\2\21\3\3\3\3"+
+		"\5\3\26\n\3\3\3\5\3\31\n\3\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\5\5#\n\5\5"+
+		"\5%\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3"+
+		"\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6>\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6F\n"+
+		"\6\f\6\16\6I\13\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7"+
+		"W\n\7\3\7\3\7\3\7\3\7\3\7\3\7\7\7_\n\7\f\7\16\7b\13\7\3\7\2\4\n\f\b\2"+
+		"\4\6\b\n\f\2\2\2t\2\17\3\2\2\2\4\25\3\2\2\2\6\32\3\2\2\2\b$\3\2\2\2\n"+
+		"=\3\2\2\2\fV\3\2\2\2\16\20\5\4\3\2\17\16\3\2\2\2\20\21\3\2\2\2\21\17\3"+
+		"\2\2\2\21\22\3\2\2\2\22\3\3\2\2\2\23\26\5\6\4\2\24\26\5\n\6\2\25\23\3"+
+		"\2\2\2\25\24\3\2\2\2\26\30\3\2\2\2\27\31\7\31\2\2\30\27\3\2\2\2\30\31"+
+		"\3\2\2\2\31\5\3\2\2\2\32\33\5\b\5\2\33\34\7\32\2\2\34\7\3\2\2\2\35%\7"+
+		"\3\2\2\36%\7\4\2\2\37%\7\5\2\2 %\7\6\2\2!#\7\7\2\2\"!\3\2\2\2\"#\3\2\2"+
+		"\2#%\3\2\2\2$\35\3\2\2\2$\36\3\2\2\2$\37\3\2\2\2$ \3\2\2\2$\"\3\2\2\2"+
+		"%\t\3\2\2\2&\'\b\6\1\2\'(\7\b\2\2()\5\n\6\2)*\7\t\2\2*>\3\2\2\2+,\5\f"+
+		"\7\2,-\7\n\2\2-.\5\f\7\2.>\3\2\2\2/\60\5\f\7\2\60\61\7\13\2\2\61\62\5"+
+		"\f\7\2\62>\3\2\2\2\63\64\7\f\2\2\64>\5\f\7\2\65\66\7\r\2\2\66>\5\f\7\2"+
+		"\678\7\16\2\28>\5\f\7\29:\7\17\2\2:>\5\f\7\2;<\7\20\2\2<>\5\n\6\5=&\3"+
+		"\2\2\2=+\3\2\2\2=/\3\2\2\2=\63\3\2\2\2=\65\3\2\2\2=\67\3\2\2\2=9\3\2\2"+
+		"\2=;\3\2\2\2>G\3\2\2\2?@\f\4\2\2@A\7\21\2\2AF\5\n\6\5BC\f\3\2\2CD\7\22"+
+		"\2\2DF\5\n\6\4E?\3\2\2\2EB\3\2\2\2FI\3\2\2\2GE\3\2\2\2GH\3\2\2\2H\13\3"+
+		"\2\2\2IG\3\2\2\2JK\b\7\1\2KW\7\32\2\2LM\7\b\2\2MN\5\f\7\2NO\7\t\2\2OW"+
+		"\3\2\2\2PQ\7\24\2\2QW\5\f\7\6RS\7\25\2\2SW\5\f\7\5TU\7\27\2\2UW\5\f\7"+
+		"\3VJ\3\2\2\2VL\3\2\2\2VP\3\2\2\2VR\3\2\2\2VT\3\2\2\2W`\3\2\2\2XY\f\7\2"+
+		"\2YZ\7\23\2\2Z_\5\f\7\b[\\\f\4\2\2\\]\7\26\2\2]_\5\f\7\5^X\3\2\2\2^[\3"+
+		"\2\2\2_b\3\2\2\2`^\3\2\2\2`a\3\2\2\2a\r\3\2\2\2b`\3\2\2\2\r\21\25\30\""+
+		"$=EGV^`";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

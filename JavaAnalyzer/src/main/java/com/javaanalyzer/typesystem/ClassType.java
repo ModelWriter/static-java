@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class ClassType extends Type {
 
-    public ClassType(String fullName, String shortName, boolean isAbstract) {
+    public ClassType(String fullName, String shortName) {
         super(fullName, shortName);
     }
 

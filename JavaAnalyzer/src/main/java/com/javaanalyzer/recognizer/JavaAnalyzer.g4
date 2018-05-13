@@ -7,9 +7,13 @@ type           : 'Class' | 'Interface' | 'Method' | 'Field' | ('Object')?;
 formula		    : '(' formula ')'                   #PHARANTHESSEDFORMULA
                     | expression '=' expression     #EQUAL
                     | expression 'in' expression    #IN
+                    | 'no' expression               #NO
+                    | 'some' expression             #SOME
+                    | 'one' expression              #ONE
+                    | 'lone' expression             #LONE
                     | '!' formula                   #NOT
-                    | formula '|' formula           #OR
-                    | formula '&' formula           #AND;
+                    | formula '||' formula          #OR
+                    | formula '&&' formula          #AND;
 expression	    :   VAR                             #VARIABLE
                     | '(' expression ')'            #PHARANTHESSEDEXPRESSION
                     | expression '.' expression     #JOIN
