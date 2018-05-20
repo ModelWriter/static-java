@@ -20,6 +20,8 @@ expression	    :   VAR                             #VARIABLE
                     | '*' expression                #REFLEXIVECLOSURE
                     | '^' expression                #CLOSURE
                     | expression '+' expression     #UNION
+                    | expression '-' expression     #DIFFERENCE
+                    | expression '&' expression     #INTERSECTION
                     | '~' expression                #TRANSPOSE
                     ;
 

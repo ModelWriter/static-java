@@ -17,6 +17,7 @@ import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserClassDeclaration;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserFieldDeclaration;
+import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserMethodDeclaration;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
@@ -270,6 +271,7 @@ public class JavaParserTypeSystemCreator {
                             break;
                     }
 
+                    typeSystem.declareFinal(method, ((JavaParserMethodDeclaration) m).getWrappedNode().isFinal() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
                     typeSystem.declareStatic(method, m.isStatic() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
                     typeSystem.declareAbstract(method, m.isAbstract() ? BooleanEntity.TRUE : BooleanEntity.FALSE);
 
@@ -285,9 +287,9 @@ public class JavaParserTypeSystemCreator {
                 });
 
                 // Get calls
-                declaration.findAll(MethodDeclaration.class).forEach(methodDeclaration -> {
+                resolved.getDeclaredMethods().forEach(resolvedMethodDeclaration -> {
                     try {
-                        ResolvedMethodDeclaration resolvedMethodDeclaration = methodDeclaration.resolve();
+                        MethodDeclaration methodDeclaration = ((JavaParserMethodDeclaration) resolvedMethodDeclaration).getWrappedNode();
                         Method method = (Method) entityMap.get(resolvedMethodDeclaration.getQualifiedSignature());
 
                         if (method == null) {

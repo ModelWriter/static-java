@@ -192,6 +192,30 @@ public interface JavaAnalyzerListener extends ParseTreeListener {
 	 */
 	void exitTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code DIFFERENCE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDIFFERENCE(JavaAnalyzerParser.DIFFERENCEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code DIFFERENCE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDIFFERENCE(JavaAnalyzerParser.DIFFERENCEContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code INTERSECTION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterINTERSECTION(JavaAnalyzerParser.INTERSECTIONContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code INTERSECTION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitINTERSECTION(JavaAnalyzerParser.INTERSECTIONContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code VARIABLE}
 	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
 	 * @param ctx the parse tree

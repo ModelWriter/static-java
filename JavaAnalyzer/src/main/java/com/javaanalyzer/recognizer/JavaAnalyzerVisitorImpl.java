@@ -97,6 +97,13 @@ public class JavaAnalyzerVisitorImpl extends JavaAnalyzerBaseVisitor<Node> {
     }
 
     @Override
+    public Node visitDIFFERENCE(JavaAnalyzerParser.DIFFERENCEContext ctx) {
+        Expression expression1 = (Expression) visit(ctx.expression(0));
+        Expression expression2 = (Expression) visit(ctx.expression(1));
+        return expression1.difference(expression2);
+    }
+
+    @Override
     public Node visitCLOSURE(JavaAnalyzerParser.CLOSUREContext ctx) {
         return ((Expression) visit(ctx.expression())).closure();
     }
@@ -116,6 +123,13 @@ public class JavaAnalyzerVisitorImpl extends JavaAnalyzerBaseVisitor<Node> {
         Expression expression1 = (Expression) visit(ctx.expression(0));
         Expression expression2 = (Expression) visit(ctx.expression(1));
         return expression1.join(expression2);
+    }
+
+    @Override
+    public Node visitINTERSECTION(JavaAnalyzerParser.INTERSECTIONContext ctx) {
+        Expression expression1 = (Expression) visit(ctx.expression(0));
+        Expression expression2 = (Expression) visit(ctx.expression(1));
+        return expression1.intersection(expression2);
     }
 
     @Override

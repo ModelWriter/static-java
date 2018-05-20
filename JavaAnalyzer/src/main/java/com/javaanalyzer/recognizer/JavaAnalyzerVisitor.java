@@ -119,6 +119,20 @@ public interface JavaAnalyzerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTRANSPOSE(JavaAnalyzerParser.TRANSPOSEContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code DIFFERENCE}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDIFFERENCE(JavaAnalyzerParser.DIFFERENCEContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code INTERSECTION}
+	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitINTERSECTION(JavaAnalyzerParser.INTERSECTIONContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code VARIABLE}
 	 * labeled alternative in {@link JavaAnalyzerParser#expression}.
 	 * @param ctx the parse tree

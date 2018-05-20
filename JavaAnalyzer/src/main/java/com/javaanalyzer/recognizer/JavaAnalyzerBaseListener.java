@@ -208,6 +208,30 @@ public class JavaAnalyzerBaseListener implements JavaAnalyzerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDIFFERENCE(JavaAnalyzerParser.DIFFERENCEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDIFFERENCE(JavaAnalyzerParser.DIFFERENCEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterINTERSECTION(JavaAnalyzerParser.INTERSECTIONContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitINTERSECTION(JavaAnalyzerParser.INTERSECTIONContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVARIABLE(JavaAnalyzerParser.VARIABLEContext ctx) { }
 	/**
 	 * {@inheritDoc}
